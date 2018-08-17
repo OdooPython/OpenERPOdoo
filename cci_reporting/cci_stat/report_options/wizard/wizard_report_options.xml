@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+<!--==================== wizard View ==================-->
+        <record id='wizard_option_view' model="ir.ui.view">
+            <field name="name">Rapport option</field>
+            <field name="model">cci.wizard.option</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Rapport Par Options" >
+
+					<group>
+                        <label for="date_fin" string= "Période"/>
+                        <div>
+                            <field name="date_debut" nolabel="1"/> 
+                            <label string="-" />
+                            <field name="date_fin" nolabel="1"/>
+                        </div>
+                    </group>
+                    
+					<div>
+	                    <field name="operateur" widget="radio"/>
+	                    <field name="commercial" widget="radio"/>
+	                </div>
+
+                     <group>
+                    		<field name="partner_ids"/>
+                    		<field name="section_ids"/>
+	                    	<field name="secteur_ids"/>
+	                    	<field name="user_ids"/>
+                    </group>
+                    <footer>
+	                    <group colspan="2">
+			                <div class="oe_button_box oe_right">
+								<button special="cancel" icon="gtk-cancel" string="Cancel"/>
+				                <button type="object" name="create_report" icon="gtk-go-forward" string="Creer Rapport"/>
+						    </div>
+	                    </group>
+                	</footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_wizard_option">
+            <field name="name">Rapport option</field>
+            <field name="res_model">cci.wizard.option</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_option_view"/>
+            <field name="target">new</field>
+        </record>
+
+ 	<menuitem id="submenu_wizard_option_report" name="Rapport par option" action="action_wizard_option" parent="menu_wizard_claim_list_report"/>
+
+
+
+
+<!--==================== report spec ========================-->
+        <report string="Rapport par option"
+                model="crm.lead"
+                auto="True"
+                name="jasper_options_print"
+                rml="cci_reporting/cci_stat/report_options/report/report_option.jrxml"
+                id="reposrt_option"
+                menu="False"/>
+
+
+
+    </data>
+</openerp>
+
+
+

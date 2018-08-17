@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+crm_dashboard_coach,crm.dashboard,model_crm_dashboard,cci_config_groups.group_coach_cci,1,1,1,1
+crm_dashboard_user,crm.dashboard,model_crm_dashboard,cci_config_groups.group_user_cci,1,1,1,1
+
+crm_dashboard_opportunity_coach,crm.dashboard.opportunity,model_crm_dashboard_opportunity,cci_config_groups.group_coach_cci,1,1,1,1
+crm_dashboard_opportunity_user,crm.dashboard.opportunity,model_crm_dashboard_opportunity,cci_config_groups.group_user_cci,1,1,1,1
+
+
+
+
+
+
+
+
+
+

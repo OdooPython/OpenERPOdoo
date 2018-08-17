@@ -1,0 +1,358 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_mail_information11_form">
+            <field name="name">mail.information.non.adh.form</field>
+            <field name="model">mail.information</field>
+            <field name="arch" type="xml">
+                <form string="Email message Non Adherent">
+                    <header>
+                        <button name="send" string="Envoyer Maintenant" type="object" states='outgoing' class="oe_highlight"/>
+                        <button name="mark_outgoing" string="Recommencer" type="object" states='exception,cancel'/>
+                        <button name="cancel" string="Annuler" type="object" states='outgoing'/>
+                        <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
+                    </header>
+                    <sheet>
+                        <field name="mail_message_information_id" required="0" invisible="1"/>
+                        <label for="subject" class="oe_edit_only"/>
+                        <h2>
+                            <field name="subject"/>
+                        </h2>
+                        <div style="vertical-align: top;">
+                            par
+                            <field name="author_id" class="oe_inline" string="User" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            le
+                            <field name="date" readonly="1" class="oe_inline" />
+                        </div>
+                        <group>
+                            <field name="email_from" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            <field name="email_to" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            <field name="email_cc" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            <!--<field name="email_bcc" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>-->
+                        </group>
+                        <notebook>
+                            <page string="Corps de texte" >
+                                <field name="body_html" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            </page>
+                            <page string="Avancée" groups="base.group_no_one">
+                                <group>
+                                    <group string="État">
+                                        <field name="auto_delete"/>
+                                        <field name="notification"/>
+                                        <field name="type"/>
+                                        <field name="mail_server_id"/>
+                                        <field name="model"/>
+                                        <field name="res_id"/>
+                                    </group>
+                                    <group string="Entêtes">
+                                        <field name="message_id"/>
+                                        <field name="references"/>
+                                        <field name="headers"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_information11_tree">
+            <field name="name">mail.inforation.tree</field>
+            <field name="model">mail.information</field>
+            <field name="arch" type="xml">
+                <tree string="Emails"
+                      colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
+                    <field name="date"/>
+                    <field name="subject"/>
+                    <field name="author_id" string="Utilisateur"/>
+                    <field name="message_id" invisible="1"/>
+                    <field name="model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                    <field name="email_from" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <button name="send" string="Envoyer Maintenant" type="object" icon="gtk-media-play"
+                            states='outgoing'/>
+                    <button name="mark_outgoing" string="Recommencer" type="object" icon="gtk-redo"
+                            states='exception,cancel'/>
+                    <button name="cancel" string="Annuler Email" type="object" icon="terp-gtk-stop" states='outgoing'/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_view_mail_information11" model="ir.actions.act_window">
+            <field name="name">Lettre Information Non Adhérent</field>
+            <field name="res_model">mail.information</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_mail_information11_tree"/>
+            <field name="domain">[('type_menu','=','Nadherent'),('create_uid', '=', uid)]</field>
+            <field name="context">{'type_menu':'Nadherent'}</field>
+        </record>
+
+        <record id="action_view_mail_information11_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_mail_information11_tree"/>
+            <field name="domain">[('type_menu','=','Nadherent'),('create_uid', '=', uid)]</field>
+            <field name="act_window_id" ref="action_view_mail_information11"/>
+        </record>
+        <record id="action_view_mail_information11_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mail_information11_form"/>
+            <field name="domain">[('type_menu','=','Nadherent'),('create_uid', '=', uid)]</field>
+            <field name="act_window_id" ref="action_view_mail_information11"/>
+        </record>
+
+	<!---->
+
+        <record model="ir.ui.view" id="view_mail_information_form22">
+            <field name="name">mail.information.form</field>
+            <field name="model">mail.information</field>
+            <field name="arch" type="xml">
+                <form string="Email message Adherent">
+                    <header>
+                        <button name="send" string="Envoyer Maintenant" type="object" states='outgoing' class="oe_highlight"/>
+                        <button name="mark_outgoing" string="Recommencer" type="object" states='exception,cancel'/>
+                        <button name="cancel" string="Annuler" type="object" states='outgoing'/>
+                        <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
+                    </header>
+                    <sheet>
+                        <field name="mail_message_information_id" required="0" invisible="1"/>
+                        <label for="subject" class="oe_edit_only"/>
+                        <h2>
+                            <field name="subject" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                        </h2>
+                        <div style="vertical-align: top;">
+                            par
+                            <field name="author_id" class="oe_inline" string="User" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            le
+                            <field name="date" readonly="1" class="oe_inline" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                        </div>
+                        <group>
+                            <field name="email_from" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            <!--update by marwa bm 20-09-2017-->
+                            <field name="recipient_ids" widget="many2many_tags" required="1" domain="[('is_company','=',True)]" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            <field name="email_cc" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            <!--<field name="email_bcc" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>-->
+                            <field name="reply_to" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                        </group>
+                        <notebook>
+                            <page string="Corps de texte">
+                                <field name="body_html" attrs="{'readonly': [ ('state', 'in', ['sent','received','exception','cancel'])]}"/>
+                            </page>
+                            <page string="Avancée" groups="base.group_no_one">
+                                <group>
+                                    <group string="État">
+                                        <field name="auto_delete"/>
+                                        <field name="notification"/>
+                                        <field name="type"/>
+                                        <field name="mail_server_id" string="Serveur courriel sortant"/>
+                                        <field name="model" string="Modèle de document relié"/>
+                                        <field name="res_id"/>
+                                    </group>
+                                    <group string="Entêtes">
+                                        <field name="message_id"/>
+                                        <field name="references"/>
+                                        <field name="headers"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_mail_information22_tree">
+            <field name="name">mail.inforation.tree</field>
+            <field name="model">mail.information</field>
+            <field name="arch" type="xml">
+                <tree string="Emails"
+                      colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
+                    <field name="date"/>
+                    <field name="subject"/>
+                    <field name="author_id" string="Utilisateur"/>
+                    <!--field name="coach_id"/-->
+                    <field name="message_id" invisible="1"/>
+                    <field name="recipient_ids" invisible="1"/>
+                    <field name="model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                    <field name="email_from" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
+                    <button name="mark_outgoing" string="Recommencer" type="object" icon="gtk-redo" states='exception,cancel'/>
+                    <button name="cancel" string="Cancel Email" type="object" icon="terp-gtk-stop" states='outgoing'/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_view_mail_information22" model="ir.actions.act_window">
+            <field name="name">Lettre Information Opérateur Économique</field>
+            <field name="res_model">mail.information</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_mail_information22_tree"/>
+            <!--<field name="domain">['|',('type_menu','=','Adherent'),('create_uid', '=', uid),('coach_id', '=', uid)]</field>-->
+            <field name="domain">[('type_menu','=','Adherent'),('create_uid', '=', uid)]</field>
+            <field name="context">{'type_menu':'Adherent'}</field>
+        </record>
+
+
+        <record id="action_view_mail_information22_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_mail_information22_tree"/>
+            <field name="domain">[('type_menu','=','Adherent'),('create_uid', '=', uid)]</field>
+            <field name="act_window_id" ref="action_view_mail_information22"/>
+        </record>
+
+        <record id="action_view_mail_information22_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mail_information_form22"/>
+            <field name="domain">[('type_menu','=','Adherent'),('create_uid', '=', uid)]</field>
+            <field name="act_window_id" ref="action_view_mail_information22"/>
+        </record>
+
+        <!-- Add menu entry in Settings/Email -->
+ 	<menuitem name="Lettre D'information " id="menu_mail_information" parent="base.menu_base_partner" sequence="1"/>
+
+        <menuitem name="Non Adhérent" id="menu_mail_information11" parent="menu_mail_information" action="action_view_mail_information11" />
+        <menuitem name="Opérateur Économique" id="menu_mail_information22" parent="menu_mail_information" action="action_view_mail_information22" />
+
+	<record id="menu_mail_information11" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('cci_config_groups.group_coach_cci'),ref('cci_config_groups.group_user_cci')])]"/>
+	</record>
+	<record id="menu_mail_information22" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('cci_config_groups.group_coach_cci'),ref('cci_config_groups.group_user_cci')])]"/>
+	</record>
+
+        <!--#####################################################################################################"""-->
+
+
+    <record model="ir.ui.view" id="categorie_form_view">
+        <field name="name">test.filtre.form</field>
+        <field name="model">mail.information.filtre</field>
+        <field name="arch" type="xml">
+            <form string="Choix des opérateurs économiques destinataires">
+                <div>
+                    <separator string="Sélèctionner un destinataire :" colspan="4"/>
+                    <group>
+                        <field name="filter_type" required="1" placeholder="Veuillez choisir vos destinataires ...."/>
+                    </group>
+                </div>
+
+                <group attrs="{'invisible':[('filter_type','!=', 'product')],}">
+                    <field name="product_id" on_change='onchange_case_product_id(product_id)' widget="selection"  domain="[('type','!=', 'service'),('type','!=', 'visite')]"  style="width:60%%"/>
+                </group>
+
+                <group attrs="{'invisible':[('filter_type','!=', 'etat_adhesion')]}">
+                    <field name="etat_adhesion" style="width:60%%"/>
+                </group>
+
+                <group attrs="{'invisible':[('filter_type','!=', 'secteur_activite')]}">
+                    <field name="secteur_activite" widget="many2many_tags" style="width:60%%"/>
+                </group>
+
+                <group attrs="{'invisible':[('filter_type','!=', 'group')]}">
+                    <field name="group_id" style="width:60%%"/>
+                </group>
+
+                <footer>
+                    <div class="oe_button_box oe_right">
+                        <button name="send_info_mail" type="object" string="Envoyer une lettre d'information" class="oe_highlight"/>
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+	<!--action du filtre -->
+        <record model="ir.actions.act_window" id="action_filtre_mail_info">
+            <field name="name">Choix des opérateurs économiques destinataires</field>
+            <field name="res_model">mail.information.filtre</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+	<!--Sous Menu des filtres -->
+        <menuitem id="menu_filtre_mail_info" name="Personalisée" action="action_filtre_mail_info" parent="menu_mail_information"/>
+
+
+
+
+        <!-- Add menu entry in Settings/Email for admin 26-09-2017-->
+        <record id="action_view_mail_information_op_admin" model="ir.actions.act_window">
+            <field name="name">Lettre Information Opérateur Économique</field>
+            <field name="res_model">mail.information</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_mail_information22_tree"/>
+            <field name="domain">[('type_menu','=','Adherent')]</field>
+            <field name="context">{'type_menu':'Adherent'}</field>
+        </record>
+
+        <record id="action_view_mail_information_admin_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_mail_information22_tree"/>
+            <field name="act_window_id" ref="action_view_mail_information_op_admin"/>
+        </record>
+        <record id="action_view_mail_information_admin_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mail_information_form22"/>
+            <field name="act_window_id" ref="action_view_mail_information_op_admin"/>
+        </record>
+
+
+        <!-- Add menu entry in Settings/Email for admin 26-09-2017-->
+        <record id="action_view_mail_information_na_admin" model="ir.actions.act_window">
+            <field name="name">Lettre Information Non Adhérent</field>
+            <field name="res_model">mail.information</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_mail_information11_tree"/>
+            <field name="domain">[('type_menu','=','Nadherent')]</field>
+            <field name="context">{'type_menu':'Nadherent'}</field>
+        </record>
+
+        <record id="action_view_mail_information_admin_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_mail_information11_tree"/>
+            <field name="act_window_id" ref="action_view_mail_information_na_admin"/>
+        </record>
+        <record id="action_view_mail_information_admin_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mail_information11_form"/>
+            <field name="act_window_id" ref="action_view_mail_information_na_admin"/>
+        </record>
+
+
+        <menuitem name="Non Adhérent" id="menu_mail_information_na_admin" parent="menu_mail_information" action="action_view_mail_information_na_admin" sequence="1"/>
+	    <record id="menu_mail_information_na_admin" model="ir.ui.menu">
+		    <field name="groups_id" eval="[(6,0, [ref('base.group_no_one')])]"/>
+	    </record>
+
+        <menuitem name="Opérateur Économiques" id="menu_mail_information_op_admin" parent="menu_mail_information" action="action_view_mail_information_op_admin" sequence="2"/>
+	    <record id="menu_mail_information_op_admin" model="ir.ui.menu">
+		    <field name="groups_id" eval="[(6,0, [ref('base.group_no_one')])]"/>
+	    </record>
+
+    </data>
+</openerp>
+
+
+
+

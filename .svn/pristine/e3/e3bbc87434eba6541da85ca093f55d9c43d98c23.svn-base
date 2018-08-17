@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        
+        <record model="crm.claim.stage" id="crm_claim.stage_claim1">
+            <field name="name">Brouillon</field>
+            <field name="sequence">1</field>
+            <field name="case_default" eval="True"/>
+        </record>
+
+        <record model="crm.claim.stage" id="stage_claim6">
+            <field name="name">Soumise</field>
+            <field name="sequence">2</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record model="crm.claim.stage" id="crm_claim.stage_claim5">
+            <field name="name">En cours de traitement</field>
+            <field name="sequence">3</field>
+            <field name="case_default" eval="True"/>
+        </record>
+
+        <record model="crm.claim.stage" id="stage_claim4">
+            <field name="name">Traité</field>
+            <field name="sequence">4</field>
+            <field name="case_default" eval="True"/>
+        </record>
+
+        <record model="crm.claim.stage" id="crm_claim.stage_claim2">
+            <field name="name">Résolue</field>
+            <field name="sequence">5</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record model="crm.claim.stage" id="crm_claim.stage_claim3">
+            <field name="name">Rejeté</field>
+            <field name="sequence">6</field>
+            <field name="case_default" eval="True"/>
+        </record>
+
+        
+
+    </data>
+</openerp>

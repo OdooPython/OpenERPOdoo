@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import time
+from datetime import datetime
+
+class wizard_opportunity(osv.osv_memory):
+    _name = "wizard.opportunity"
+    _description = "Opportunité"
+
+   # _columns = {
+
+   # }    
+
+

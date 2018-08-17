@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+<!--==================== wizard View ==================-->
+        <record id='wizard_claim_list_view' model="ir.ui.view">
+            <field name="name">Liste Des Plaintes</field>
+            <field name="model">cci.wizard.claim</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Rapport Fiche product" >
+                    <group col="2" fill="0" colspan="4">
+                        <field name="product_id" domain="[('type','!=', 'adhesion'),('type','!=', 'visite')]"/>
+                        <group colspan="2">
+                            <div class="oe_button_box oe_right">
+				<button special="cancel" icon="gtk-cancel" string="Cancel"/>
+	                        <button type="object" name="create_report" icon="gtk-go-forward" string="Creer Rapport"/>
+			    </div>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_wizard_claim_list">
+            <field name="name">Liste Des Réclamations</field>
+            <field name="res_model">cci.wizard.claim</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_claim_list_view"/>
+            <field name="target">new</field>
+        </record>
+ 	<menuitem id="submenu_wizard_claim_list_report" name="Liste des réclamations" action="action_wizard_claim_list"
+                  parent="menu_wizard_claim_list_report"/>
+
+
+<!--==================== report spec ========================-->
+        <report string="Liste Des Réclamations"
+		model="crm.claim"
+		auto="True"
+		name="jasper_claim_print"
+		rml="cci_stat/liste_plaintes/report/report_liste_plaintes.jrxml"
+		id="liste_reclamations"
+		menu="False"/>
+
+
+
+    </data>
+</openerp>
+
+
+

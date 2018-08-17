@@ -1,0 +1,98 @@
+# -*- coding: utf-8 -*-
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
+from openerp import api
+from openerp.exceptions import Warning
+
+class crm_claim(osv.osv):
+    _name = 'crm.claim'
+    _inherit ='crm.claim'
+
+    def _get_coach_id(self, cr, uid, ids, field_name, arg, context=None):
+	res = {}
+	for user in self.browse(cr,uid,ids,context=context):
+		user_id=self.browse(cr,uid,ids,context=context).user_id.id
+		section_ids = self.pool.get('crm.case.section').search(cr, uid, [('member_ids', '=', user_id)], context=context)
+		if not section_ids :
+			res[user.id] = 0
+		else :
+			coach_id=self.pool.get('crm.case.section').browse(cr,uid,section_ids[0],context=context).user_id.id
+			res[user.id] = coach_id
+
+	return res
+    _columns = {
+	'product_id' :fields.many2one('product.template', string="Produit", required=True),
+	'coach_id': fields.function(_get_coach_id, type="integer"),
+        'date_closed': fields.datetime('Closed', readonly=True),
+    }
+    _defaults = {
+        'state': 'draft',
+    }
+
+    def create(self, cr, uid, vals, context=None):
+
+        crm_claim_id = super(crm_claim, self).create(cr, uid, vals, context=context)
+	dict =vals
+	user_id=dict['user_id']
+
+	#notif Responsable
+	mail_vals = {
+		'body':'<html> CCI Liste Des RÉCLAMATIONS </html>',
+		'record_name':'Réclamation',
+		'res_id':crm_claim_id,
+		'reply_to':user_id,
+		'author_id':uid,
+		'model':'crm.claim',
+		'type':'notification',
+		'email_from':uid,
+		'starred':True,
+	}
+	message = self.pool.get('mail.message').create(cr, uid, mail_vals, context=context) 
+
+	partner_id=self.pool.get('res.users').browse(cr, uid, user_id, context=context).partner_id.id
+	mail_notif_vals = {
+		'partner_id':partner_id,
+		'message_id':message,
+		'is_read':False,
+		'starred':True,
+
+	}
+	id_rec=self.pool.get('mail.notification').create(cr, uid, mail_notif_vals)
+	return crm_claim_id
+
+    #suite à la changement de l'état de la réclamation, une notification sera envoyé au responsable 
+    @api.multi  
+    @api.onchange('stage_id')  # triggered fields
+    def write(self, vals):
+	super(crm_claim, self).write(vals)
+	if self.stage_id:
+		name = self.env['crm.claim.stage'].browse(self.stage_id.id).name
+		
+		mail_vals = {
+			'body':'<html> CCI Liste Des RÉCLAMATIONS </html>',
+			'record_name':'Réclamation',
+			'res_id':self.id,
+			'reply_to':self.user_id,
+			'author_id':self.env.uid,
+			'model':'crm.claim',
+			'type':'notification',
+			'email_from':self.env.uid,
+			'starred':True,
+		}
+		message = self.env['mail.message'].create(mail_vals)
+		partner_id=self.env['res.users'].browse(self.user_id.id).partner_id.id
+		mail_notif_vals = {
+			'partner_id':partner_id,
+			'message_id':message.id,
+			'is_read':False,
+			'starred':True,
+		}
+		self.env['mail.notification'].create(mail_notif_vals)
+
+
+
+
+
+
+
+

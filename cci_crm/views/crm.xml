@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+       <!-- <record id="menu_purchase_rfq_inherited" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherited</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref='purchase.menu_purchase_rfq'/>
+            <field name="arch" type="xml">
+		
+		<xpath expr="//div[@class='oe_title']" position="after">-->
+          
+                   
+
+<!--<record id="make_invisible" model="res.groups"> 
+<field name="name">Invisible</field> </record>
+<record model="ir.ui.menu" id="menu_sale_quotations"> 
+<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/> </record>-->
+
+
+
+
+<!--quotations-->
+
+<!--<record id="group_hide_menus" model="res.groups">
+
+<field name="name">Invisible</field> </record>
+
+<record model="ir.ui.menu" id="base.menu_sale_quotations">
+
+<field name="groups_id" eval="[(6, 0, [ref(‘group_hide_menus’)])]"/>
+
+
+</record>-->
+<!--menu sale orders-->
+<!--<record id="group_hide_menus" model="res.groups">
+
+<field name="name">Invisible</field> </record>
+
+<record model="ir.ui.menu" id="base.menu_sale_order">
+
+<field name="groups_id" eval="[(6, 0, [ref(‘group_hide_menus’)])]"/>
+
+</record>-->
+<!--menu Leads-->
+
+<record id="group_hide_menus" model="res.groups">
+
+<field name="name">Invisible</field> </record>
+
+<record model="ir.ui.menu" id="base.menu_crm_config_lead">
+
+<field name="groups_id" eval="[(6, 0, [ref(‘group_hide_menus’)])]"/>
+
+</record>
+  
+      </data>
+</openerp>

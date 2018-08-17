@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="consultation_template_form_view" model="ir.ui.view">
+            <field name="name">CCI Form Consultation</field>
+            <field name="model">cci.consultation</field>
+            <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group col="4">
+                        <field name="name" />
+                        <field name="date_cons" />
+                        <field name="type_id" />
+                        <field name="op_eco_exist" />
+                        <field name="op_eco_id" attrs="{'invisible': [('op_eco_exist', '=', False)]}" />
+                        <field name="op_eco_new" attrs="{'invisible': [('op_eco_exist', '=', True)]}"/>
+                        <field name="note" />
+
+                </group>
+            </sheet>
+        </form>
+	    </field>
+
+	</record>
+<!--<group>
+                        <field name="name" />
+                        <field name="type_id" />
+                        <field name="op_eco_id" attrs="{'invisible': [('op_eco_exist', '=', False)]}" />
+                        <field name="note" />
+                    </group>
+                    <group>
+                        <field name="date_cons" />
+                        <field name="op_eco_exist" />
+                        <field name="op_eco_new" attrs="{'invisible': [('op_eco_exist', '=', True)]}"/>
+                    </group>
+                    -->
+
+	<record id="consultation_template_tree_view" model="ir.ui.view">
+            <field name="name">consultation.template.consultation.tree</field>
+            <field name="model">cci.consultation</field>
+            <field name="arch" type="xml">
+            <tree string="Consultation">
+                <field name="name" />
+                <field name="type_id" />
+                <field name="date_cons" />
+                <field name="op_eco_exist" />
+                <field name="op_eco_id" attrs="{'invisible': [('op_eco_exist', '=', False)]}" />
+                <field name="op_eco_new" attrs="{'invisible': [('op_eco_exist', '=', True)]}"/>
+                <field name="note" />
+            </tree>
+            </field>
+        </record>
+
+        <record id="consultation_template_action" model="ir.actions.act_window">
+            <field name="name">Consultation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cci.consultation</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="consultation_template_tree_view"/>
+
+        </record>
+        <menuitem action="consultation_template_action"
+            id="menu_consultation_template_action"
+            parent="base.menu_product" sequence="2" />
+
+    </data>
+</openerp>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_mail_form_inherit">
+            <field name="name">mail.mail.form.inherit</field>
+            <field name="model">mail.mail</field>
+            <field name="inherit_id" ref="mail.view_mail_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='recipient_ids']" position="after">
+                    <field name='partner_contact_id' domain="[('parent_id','=', recipient_ids[0][2])]"
+                           on_change='onchange_contact(partner_contact_id)'/>
+                    <field name='opportunity_ids' domain="[('partner_id','=', recipient_ids[0][2])]"/>
+
+                </xpath>
+                <xpath expr="//field[@name='author_id']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='email_to']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='email_cc']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='reply_to']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='recipient_ids']" position="attributes">
+                    <attribute name="domain">[('is_company','=', True)]</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='send']" position="replace">
+                    <button name="send_mail" context="{'active_id': active_id}" string="Send Now" type="object"
+                            states='outgoing'/>
+                </xpath>
+
+                <page string="Attachments" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </page>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_mail_tree_inherit">
+            <field name="name">mail.mail.tree.inherit</field>
+            <field name="model">mail.mail</field>
+            <field name="arch" type="xml">
+                <tree string="Emails"
+                      colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
+                    <field name="date"/>
+                    <field name="subject"/>
+                    <field name="author_id" string="User"/>
+                    <field name="message_id" invisible="1"/>
+                    <field name="recipient_ids" invisible="1"/>
+                    <field name="model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                    <field name="email_from" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="opportunity_ids"/>
+                    <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
+                    <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo"
+                            states='exception,cancel'/>
+                    <button name="cancel" string="Cancel Email" type="object" icon="terp-gtk-stop" states='outgoing'/>
+                    <button name="closed_action_mail" string="Terminer" type="object" icon="terp-gtk-stop"/>
+                </tree>
+
+            </field>
+        </record>
+
+
+        <record id="action_view_mail_mail_inherit" model="ir.actions.act_window">
+            <field name="name">Emails</field>
+            <field name="res_model">mail.mail</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- hide default search Add by Marwa BM 07-07-2017-->
+            <field name="context">{'search_default_outgoing': 0}</field>
+            <field name="view_id" ref="view_mail_tree_inherit"/>
+        </record>
+
+        <!--Menu Email-->
+        <menuitem name="Emails" id="menu_mail_mail" parent="test_menu_crm_config_activity"
+                  action="action_view_mail_mail_inherit"/>
+
+    </data>
+</openerp>

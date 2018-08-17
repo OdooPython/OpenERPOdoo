@@ -1,0 +1,108 @@
+# -*- coding: utf-8 -*-
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import time
+from datetime import datetime
+from random import *
+
+class wizard_product(osv.osv_memory):
+    _name = "wizard.product"
+    _description = "lancer Compagne Marketing"
+
+    _columns = {
+	'product_id':fields.many2one('product.template',"Produit"),
+	'partner_list':fields.one2many('res.partner','id',string='op'),
+    }    
+
+
+    def get_operateur(self, cr, uid, ids, context=None):
+	print "you call opérateur ..........."
+	list_member_id= []
+	list_partner= []
+
+	product_wi_id=self.browse(cr,uid,ids,context=context)[0].id
+	print "wizard product........",product_wi_id
+
+	product_tmp_id=self.browse(cr,uid,product_wi_id,context=context).product_id.id
+	print "product........",product_tmp_id
+
+	name_prod=self.pool.get('product.template').browse(cr,uid,product_tmp_id,context=context).name
+	print 'name=======',name_prod
+	price=self.pool.get('product.template').browse(cr,uid,product_tmp_id,context=context).list_price
+	print 'price=======',price
+
+	cr.execute('SELECT res_partner_category_id FROM product_template_res_partner_category_rel WHERE product_template_id=%s',(product_tmp_id,))
+	lines_partner = cr.dictfetchall()
+	for line_partner in lines_partner :
+		res_partner_category_id=line_partner['res_partner_category_id']
+	
+
+
+        	cr.execute('SELECT partner_id FROM res_partner_res_partner_category_rel WHERE category_id=%s',(res_partner_category_id,))
+		lines = cr.dictfetchall()
+
+		for line in lines :
+			partner_id=line['partner_id']
+        		cr.execute('SELECT id FROM res_partner WHERE id=%s AND is_company =%s',(partner_id,True))
+			partner_lines = cr.dictfetchall()
+			for i in partner_lines :
+				id_partner= i['id']
+				list_partner.append(id_partner)
+
+	print "liste des partenaires ",list_partner
+	print "secteur d'activité  =========",res_partner_category_id 
+
+
+	
+
+	categ_id=self.pool.get('product.template').browse(cr,uid,product_tmp_id,context=context).categ_id.id
+	print "catégorie du produit=====",categ_id
+	cr.execute('SELECT crm_case_section_id FROM crm_case_section_product_category_rel WHERE product_category_id=%s',(categ_id,))
+	lines_Dep = cr.dictfetchall()
+	for line_dep in lines_Dep :
+		crm_case_section_id=line_dep['crm_case_section_id']
+		print 'les départements concernés sont =========',crm_case_section_id
+
+		cr.execute('SELECT member_id FROM sale_member_rel WHERE section_id=%s',(crm_case_section_id,))
+		lines_member = cr.dictfetchall()
+		for line_member in lines_member :
+			member_id=line_member['member_id']
+			list_member_id.append(member_id)
+
+		print "liste des membres .....",list_member_id
+
+
+		crm_lead=self.pool.get('crm.lead')
+
+		for partner in list_partner:
+			print 'Partner',partner
+			
+			print '================begin================='
+			
+			#for member in list_member_id:
+			n=len[list_member_id]
+			while i < n :
+				print "i.....",i
+				#for member in list_member_id:
+				print '================================='
+
+				vals={
+					#'name':name,
+					'partner_id': partner,
+					#'contact_name':partner_id, nom du partenaire
+					'section_id': crm_case_section_id,
+					'type':'opportunity',
+					'user_id':list_member_id[i],
+					'product_id':product_tmp_id,
+					'planned_revenue':price,
+				}
+				print 'les valeurs ajoutés =======',vals
+
+				piste= crm_lead.create(cr,1,vals)
+				print 'piste ====',piste
+				print '================================='
+				
+			print '================end================='
+
+
+	return True 

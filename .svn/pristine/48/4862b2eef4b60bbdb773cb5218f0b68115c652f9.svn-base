@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="operateur_economique_form_view">
+            <field name="name">operateur_economique.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+
+
+                <xpath expr="//page[@name='accounting']" position="replace">
+                </xpath>
+
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="matricule_fiscale" />
+                    <field name="code_tva" />
+                </xpath>
+                <xpath expr="//field[@name='lang']" position="replace">
+                </xpath>
+
+                <xpath expr="//field[@name='date']" position="replace">
+                </xpath>
+
+                <xpath expr="//field[@name='category_id']" position="replace">
+                    <label for="category_id" string="Secteurs d'activités" />
+                    <field name="category_id" string="Secteurs d'activités" widget="many2many_tags"></field>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Partner kanban view inherte add 04-10-2017 
+		add a the value of the total of won opportunity
+	-->
+        <record model="ir.ui.view" id="crm_lead_partner_kanban_view_inherit">
+            <field name="name">res.partner.kanban.saleorder.inherit2</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <field name="mobile" position="after">
+                    <field name="opportunity_order_count"/>
+                </field>
+                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                    <a name="%(crm.crm_case_category_act_oppor11)d" type="action" t-if="record.opportunity_order_count.value>0">
+                        <t t-esc="record.opportunity_order_count.value"/> Opportunités gagnées
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+	<!--update style buttons 03-10-2017 update 04-10-2017
+		add a button who calculate the total of won opportunity
+	-->
+        <record id="view_partners_form_crm1_inherit" model="ir.ui.view">
+            <field name="name">view.res.partner.form.crm.inherited2</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="crm.view_partners_form_crm1"/>
+            <field name="arch" type="xml">
+		   <xpath expr="//div[@name='buttons']/button" position="inside">
+                    <button class="oe_inline oe_stat_button" type="action" name="%(crm.crm_case_category_act_oppor11)d" 
+                        attrs="{'invisible': [('customer', '=', False)]}"
+                        icon="fa-strikethrough">
+                        <field string="Totals" name="opportunity_order_count" widget="statinfo"/>
+                    </button> 
+		   </xpath>
+                    <!-- <xpath expr="//field[@name='opportunity_count']" position="attributes">
+                        <attribute name="string">Opportunités en cours</attribute>
+		    </xpath>
+
+                    <xpath expr="//field[@name='meeting_count']" position="attributes">
+                        <attribute name="string">Rendez-vous planifiés</attribute>
+		    </xpath>-->
+                    <!--xpath expr="//button[@name='schedule_meeting']" position="attributes">
+                        <attribute name="style">"width:55%%"</attribute>
+		    </xpath-->
+
+
+            </field>
+        </record>
+
+	<!--update button ventes 03-10-2017 update 04-10-2017 
+		make the button sale invisible
+	-->
+        <record id="res_partner_view_buttons_inherit" model="ir.ui.view">
+            <field name="name">res.partner.view.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="sale.res_partner_view_buttons" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                    <xpath expr="//field[@name='sale_order_count']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+		    </xpath>
+                    <xpath expr="//div/button[@name='%(sale.act_res_partner_2_sale_order)d']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+		    </xpath>
+            </field>
+        </record>
+
+        <record id="view_partners_form_crm_calls_inherit" model="ir.ui.view">
+            <field name="name">view.res.partner.form.crm.inherited.calls2</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="crm.view_partners_form_crm_calls"/>
+            <field name="arch" type="xml">
+                    <xpath expr="//field[@name='phonecall_count']" position="attributes">
+                        <attribute name="string">Appels planifiés</attribute>
+		    </xpath>
+            </field>
+        </record>
+
+
+
+	<!--Liste des opérateurs économiques Update by Marwa BM 02-08-2017-->
+        <record id="action_partner_form" model="ir.actions.act_window">
+            <field name="name">Opérateurs Économiques</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="create">False</field>
+	    <field name="domain">[('is_company','=', 'True')]</field>
+            <field name="context">{"search_default_customer":0}</field>
+        </record>
+
+
+
+        <!--Secteur View added by Salwa KSILA update by Marwa BM 29-06-2017-->
+        <record model="ir.ui.view" id="secteur_form_view">
+            <field name="name">Secteur.form</field>
+            <field name="model">res.partner.category</field>
+            <field name="arch" type="xml">
+                <form string="Secteur Form">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="secteur_tree_view">
+            <field name="name">Secteur.tree</field>
+            <field name="model">res.partner.category</field>
+            <field name="arch" type="xml">
+                <tree string="Secteur Tree">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="secteur_menu_action">
+            <field name="name">Secteur</field>
+            <field name="res_model">res.partner.category</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="base.view_partner_category_list"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!--Menu Secteur d'activités ADDED BY SALWA KSILA Update By Marwa BM-->
+        <menuitem id="menu_crm_config_secteurs_act" name="Secteurs d'activités" parent="base.menu_base_config" sequence="60" action="secteur_menu_action" 					      groups="cci_config_groups.group_coach_cci,cci_config_groups.group_user_cci"/>
+
+	<record id="menu_crm_config_secteurs_act" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one')])]"/>
+	</record>
+
+        <menuitem id="menu_partner_form_inherit" parent="base.menu_sales" name="Opérateurs économiques" action="action_partner_form" sequence="2"/>
+
+	<record id="menu_partner_form_inherit" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one'),ref('cci_config_groups.group_coach_cci'),ref('cci_config_groups.group_user_cci')])]"/>
+	</record>
+
+        <!--Menu Demande opérateurs économique add by marwa BM le 07-08-2017-->
+	<menuitem id="menu_sales_team_maj" name="Demande Création/Modification Partenaire" parent="base.menu_base_partner" sequence="1" />
+ 
+
+
+
+
+    </data>
+</openerp>

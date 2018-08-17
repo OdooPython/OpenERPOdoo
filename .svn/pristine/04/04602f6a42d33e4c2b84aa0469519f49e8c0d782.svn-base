@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+ 	<record id="survey_form_inherit" model="ir.ui.view">
+            <field name="name">CRM - Claims Form Inherit</field>
+            <field name="model">survey.survey</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="survey.survey_form"/>
+            <field name="arch" type="xml">
+		<!-- update 04-09-2017-->
+		<xpath expr="//div/h1" position="after">
+			<label for="product_id" class="oe_edit_only"/>	
+			<h1><field name="product_id" domain="[('type','!=','service')]"/></h1>
+	        </xpath>
+	    </field>
+	</record>
+
+	<menuitem name="Sondages" id="menu_surveys_inherit" parent="base.menu_base_partner" sequence="18" />
+
+	<menuitem name="Questions" id="menu_survey_form_inherit" action="survey.action_survey_form" parent="menu_surveys_inherit" sequence="1"/>
+	<menuitem name="Réponses" id="menu_survey_type_form1_inherit" action="survey.action_survey_user_input" parent="menu_surveys_inherit" sequence="2"/>
+
+	<!-- add 04-09-2017-->
+	<record id="menu_surveys_inherit" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one'),ref('cci_config_groups.group_coach_cci'),ref('cci_config_groups.group_user_cci')])]"/>
+	</record>
+
+	<record id="menu_survey_form_inherit" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one'),ref('cci_config_groups.group_coach_cci'),ref('cci_config_groups.group_user_cci')])]"/>
+	</record>
+
+	<record id="menu_survey_type_form1_inherit" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one'),ref('cci_config_groups.group_coach_cci'),ref('cci_config_groups.group_user_cci')])]"/>
+	</record>
+
+    </data>
+</openerp>

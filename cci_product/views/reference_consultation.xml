@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+    <!--Sequence Type-->
+        <record id="ir_seq_type_ref_consult" model="ir.sequence.type">
+            <field name="name">Reference Consultation</field>
+            <field name="code">RefConsult</field>
+        </record>
+        <!--Sequence-->
+        <record id="ir_seq_ref_consult" model="ir.sequence">
+            <field name="name">Reference Consultation</field>
+            <field name="code">RefConsult</field>
+            <field name="prefix">Consultation N°</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+            <field name="implementation">standard</field>
+            <!-- QWeb Reports -->
+            <!-- NAME & FILE_NAME should be the same -->
+                    <!--<report-->
+                        <!--id="UNIQUE_REPORT_ID"-->
+                        <!--model="MODEL_WHERE_THE_REPORT_WILL_BE_PRINTED"-->
+                        <!--report_type="qweb-pdf"-->
+                        <!--string="LABEL"-->
+                        <!--name="NAME"-->
+                        <!--file="emplacement fichier"-->
+                    <!--/>-->
+        </record>
+    </data>
+</openerp>

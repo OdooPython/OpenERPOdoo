@@ -1,0 +1,44 @@
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="res_partner_group_form_view">
+	<field name="name">res.partner.group.form</field>
+	<field name="model">res.partner.group</field>
+	<field name="arch" type="xml">
+		<form>
+			<sheet>
+				<group>
+					<group>
+					<field name='name'/>
+					<field name='code'/>
+					<field name='partner_ids'/>
+					</group>
+				</group>
+			</sheet>
+		</form>
+	</field>
+	</record>
+
+        <record model="ir.ui.view" id="res_partner_group_tree_view">
+	<field name="name">res.partner.group.tree</field>
+	<field name="model">res.partner.group</field>
+	<field name="arch" type="xml">
+		<tree>
+			<field name='name'/>
+			<field name='code'/>
+		</tree>
+	</field>
+	</record>
+
+
+        <record id="res_partner_group_action" model="ir.actions.act_window">
+	<field name="name">Groupe Opérateurs Économiques</field>
+	<field name="res_model">res.partner.group</field>
+	<field name="view_type">form</field>
+	<field name="view_mode">tree,form</field>
+	<field name="view_id" ref="res_partner_group_tree_view"/>
+
+        </record>
+	<menuitem name="Groupe Opérateurs Économiques" id="menu_partner_group" parent="base.menu_base_config" action="res_partner_group_action"/>
+</data>
+</openerp>

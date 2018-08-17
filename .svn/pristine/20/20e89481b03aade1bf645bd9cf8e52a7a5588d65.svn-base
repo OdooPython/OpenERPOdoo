@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+ 	<record id="crm_case_claims_form_view_inherit" model="ir.ui.view">
+            <field name="name">CRM - Claims Form Inherit</field>
+            <field name="model">crm.claim</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="crm_claim.crm_case_claims_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//header/field[@name='stage_id']" position="replace">
+                    <button string="Soumis" name="soumise_bt" states="draft" type="workflow" class="oe_highlight"/>
+                    <button string="À traité" name="to_valid_bt" states="soumise" type="workflow" class="oe_highlight"/>
+					<button string="Traité" name="valid_bt" states="to_validate" type="workflow" class="oe_highlight"/>
+                    <button string="Cloturé" name="close_bt" states="validate" type="workflow" class="oe_highlight"/>
+                    <button string="Rejeté" name="reject_bt" states="to_validate" type="workflow" class="oe_highlight"/>
+
+					<field name="state" widget="statusbar" statusbar_visible="draft,soumise,to_validate,validate,close"/>
+                </xpath>
+		
+                <xpath expr="//separator[@string='Responsibilities']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_fault']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='categ_id']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='ref']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='section_id']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="product_id" domain="[('type','!=', 'visite'),('type','!=', 'service')]"/>
+                </xpath>
+
+                <field name='partner_id' position="attributes">
+                    <attribute name="domain">[('is_company','=', True)]</attribute>
+                </field>
+
+                <xpath expr="//page[@string='Follow Up']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//page[@string='Claim Description']" position='after'>
+                    <page string="Historique">
+                        <field name='history_ids'>
+                            <tree>
+                                <field name='state'/>
+                                <field name='partner_id'/>
+                                <field name='date_claim'/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <!--affichage du coach id-->
+                <!--<xpath expr="//field[@name='partner_id']" position="after">-->
+			        <!--<field name="coach_id"/>-->
+		        <!--</xpath>-->
+		</field>
+	</record>
+
+    <record id="crm_claims_history_form_view" model="ir.ui.view">
+        <field name="name">CRM - Claims History Form</field>
+        <field name="model">crm.claim.history</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string='Historique des réclamation'>
+                <group>
+                    <field name='state'/>
+                    <field name='partner_id'/>
+                    <field name='date_claim'/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+
+
+        <!-- Claims Menu crm_claim.menu_crm_case_claims-->
+        <record model="ir.actions.act_window" id="crm_case_categ_claim0_inherit">
+            <field name="name">Réclamations</field>
+            <field name="res_model">crm.claim</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_id" ref="crm_claim.crm_case_claims_tree_view"/>
+            <field name="context">{"stage_type":'claim'}</field>
+            <field name="search_view_id" ref="crm_claim.view_crm_case_claims_filter"/>
+        </record>
+
+	<!-- change the colors for claims colors="red:date_deadline and (date_deadline &lt; current_date)" 30-10-2017-->
+
+       <record id="crm_case_claims_tree_view_inherit" model="ir.ui.view">
+            <field name="name">crm_case_claims_tree_view_inherit</field>
+            <field name="model">sale.order</field>
+            <field name="type">tree</field>
+            <!--<field name="inherit_id" ref="crm_claim.crm_case_claims_tree_view"/>-->
+            <field name="arch" type="xml">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+            </field>
+        </record>
+
+
+
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_tree_claim0_inherit">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_claims_tree_view_inherit"/>
+            <field name="act_window_id" ref="crm_case_categ_claim0_inherit"/>
+        </record>
+
+	<!--sequence after sale 30-10-2017-->
+	<record model="ir.ui.menu" id="base.menu_aftersale">
+            <field name="sequence">15</field>
+	</record>
+
+        <!-- change the action of the menuitem réclamation update 26-09-2017 by Marwa BM-->
+        <record model="ir.ui.menu" id="crm_claim.menu_crm_case_claims">
+            <field name="action" ref="crm_case_categ_claim0_inherit"/>
+            <field name="groups_id" eval="[(6,0, [ref('base.group_no_one'), ref('cci_config_groups.group_coach_cci')])]"/>
+        </record>
+
+
+        <!-- Menu et Action réclamation pour chef et commerciaux add 26-09-2017 by Marwa BM-->
+        <record model="ir.actions.act_window" id="crm_case_categ_claim_inherit_admin">
+            <field name="name">Réclamations</field>
+            <field name="res_model">crm.claim</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_id" ref="crm_case_claims_tree_view_inherit"/>
+            <field name="context">{"stage_type":'claim'}</field>
+            <field name="domain">[('user_id.id','=', uid),('user_id', '!=', 1),('coach_id.id','=',uid)]</field>
+            <field name="search_view_id" ref="crm_claim.view_crm_case_claims_filter"/>
+        </record>
+
+        <menuitem id='menu_crm_case_claims_admin' parent='base.menu_aftersale' action="crm_case_categ_claim_inherit_admin" name="Réclamations"/>
+        <record id='menu_crm_case_claims_admin' model="ir.ui.menu">
+            <field name="groups_id" eval="[(6,0, [ref('cci_config_groups.group_user_cci')])]"/>
+        </record>
+
+
+
+
+    </data>
+</openerp>

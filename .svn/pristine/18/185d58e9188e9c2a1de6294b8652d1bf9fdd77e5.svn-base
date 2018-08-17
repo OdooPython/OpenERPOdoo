@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+{
+	'name': "CCI MESSAGERIE",
+	'description':  """
+CCI MESSAGERIE.
+========================
+Ce module gère la messagerie interne de la CCI. Il permet aux personnels de communiques les emails entre eux.
+""",
+	'author': "Houssem ABID I-WAY",
+        "website": "http://www.i-way.tn.com",
+	'category': 'Mailing',
+	'version': '0.1',
+	'depends': ['base','mail'],
+
+	'data': [
+		'security/ir.model.access.csv',
+		'messaging_view.xml',
+	],
+	'demo': [
+		'demo.xml',
+	],
+}

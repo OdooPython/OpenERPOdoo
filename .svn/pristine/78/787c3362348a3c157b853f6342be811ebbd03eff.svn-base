@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mail_information_coach,mail.information.coach,model_mail_information,cci_config_groups.group_coach_cci,1,1,1,1
+access_mail_information_user,mail.information.user,model_mail_information,cci_config_groups.group_user_cci,1,1,1,1

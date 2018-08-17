@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Fiche Produit" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.3310000000000084"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="77"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/opt/odoo/CCI_CRM/cci_reporting/cci_stat/Fiche_product/report/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="subreport1" class="java.lang.Object"/>
+	<parameter name="claim_subreport" class="java.lang.Object"/>
+	<queryString language="xPath">
+		<![CDATA[]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/name]]></fieldDescription>
+	</field>
+	<field name="op_eco" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/op_eco]]></fieldDescription>
+	</field>
+	<field name="product_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/product_id]]></fieldDescription>
+	</field>
+	<field name="participant_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/participant_id]]></fieldDescription>
+	</field>
+	<field name="presence" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/presence]]></fieldDescription>
+	</field>
+	<field name="total_participant" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[/data/record/total_participant]]></fieldDescription>
+	</field>
+	<field name="revenue_total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[/data/record/revenue_total]]></fieldDescription>
+	</field>
+	<field name="date_debut" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/date_debut]]></fieldDescription>
+	</field>
+	<field name="date_fin" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/date_fin]]></fieldDescription>
+	</field>
+	<field name="dateAuj" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/dateAuj]]></fieldDescription>
+	</field>
+	<field name="Contact-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Participants-participant_ids/Contact-name]]></fieldDescription>
+	</field>
+	<field name="Operateur_Economique-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Participants-participant_ids/Operateur_Economique-participant_id/Operateur_Economique-name]]></fieldDescription>
+	</field>
+	<field name="Participant-contact_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Presence_Session-presence_ids/Participant-contact_id]]></fieldDescription>
+	</field>
+	<field name="Operateur_Economique-participant_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Presence_Session-presence_ids/Participant-contact_id/Operateur_Economique-participant_id]]></fieldDescription>
+	</field>
+	<field name="Date_debut-heure_debut" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Presence_Session-presence_ids/Session-session_id/Date_debut-heure_debut]]></fieldDescription>
+	</field>
+	<field name="Date_fin-heure_fin" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Presence_Session-presence_ids/Session-session_id/Date_fin-heure_fin]]></fieldDescription>
+	</field>
+	<field name="Titre-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Presence_Session-presence_ids/Session-session_id/Titre-name]]></fieldDescription>
+	</field>
+	<group name="groupe line">
+		<groupHeader>
+			<band height="78">
+				<textField>
+					<reportElement x="97" y="15" width="424" height="21" forecolor="#901D1D"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{product_id}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="131" y="35" width="253" height="21" forecolor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{date_debut}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="44" y="35" width="86" height="21" forecolor="#0C408E"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Date début :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="44" y="56" width="86" height="21" forecolor="#0C408E"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Date fin :]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="131" y="56" width="253" height="21" forecolor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{date_fin}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="20" y="15" width="77" height="20" forecolor="#0C408E"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Produit :]]></text>
+				</staticText>
+			</band>
+			<band height="59">
+				<staticText>
+					<reportElement x="147" y="39" width="146" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Opérateur économique]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="293" y="39" width="137" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Contact]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="20" y="0" width="171" height="23" forecolor="#0C408E"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Liste des participants :]]></text>
+				</staticText>
+			</band>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="25">
+				<elementGroup>
+					<elementGroup>
+						<rectangle radius="10">
+							<reportElement x="339" y="0" width="206" height="25" isRemoveLineWhenBlank="true" forecolor="#0C408E" backcolor="#FFFFFF"/>
+						</rectangle>
+						<textField isBlankWhenNull="true">
+							<reportElement x="498" y="0" width="47" height="25" isRemoveLineWhenBlank="true"/>
+							<box>
+								<bottomPen lineWidth="0.0"/>
+							</box>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{total_participant}]]></textFieldExpression>
+						</textField>
+					</elementGroup>
+				</elementGroup>
+				<staticText>
+					<reportElement x="345" y="0" width="153" height="25" forecolor="#0C408E"/>
+					<box topPadding="0" leftPadding="0"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombre des participants :]]></text>
+				</staticText>
+			</band>
+			<band>
+				<elementGroup/>
+			</band>
+			<band height="66">
+				<subreport runToBottom="false">
+					<reportElement x="38" y="47" width="449" height="12" isRemoveLineWhenBlank="true"/>
+					<dataSourceExpression><![CDATA[$P{subreport1}]]></dataSourceExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "sessions_subreport.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement x="232" y="26" width="128" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Date début]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="359" y="26" width="128" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Date fin]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="38" y="26" width="195" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Titre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="20" y="0" width="144" height="23" forecolor="#0C408E"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Liste des sessions :]]></text>
+				</staticText>
+			</band>
+			<band height="97">
+				<staticText>
+					<reportElement x="20" y="0" width="185" height="23" forecolor="#0C408E"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Liste des réclamations :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="39" width="111" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Objet]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="111" y="39" width="80" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Opérateur économique]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="39" width="109" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Date d'échéance]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="191" y="39" width="109" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Date de réclamation]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="409" y="39" width="90" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Responsable]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="499" y="39" width="56" height="20" forecolor="#0C408E"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Etat]]></text>
+				</staticText>
+				<subreport runToBottom="false">
+					<reportElement isPrintRepeatedValues="false" x="0" y="59" width="555" height="29" isRemoveLineWhenBlank="true"/>
+					<dataSourceExpression><![CDATA[$P{claim_subreport}]]></dataSourceExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "claims_subreport.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="26">
+				<rectangle radius="10">
+					<reportElement x="339" y="0" width="206" height="25" forecolor="#0C408E" backcolor="#FFFFFF"/>
+				</rectangle>
+				<textField pattern="###0.000">
+					<reportElement x="449" y="0" width="96" height="25" isRemoveLineWhenBlank="true"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{revenue_total}.setScale(3).toString()+" "+"DT"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="345" y="0" width="96" height="25" isRemoveLineWhenBlank="true" forecolor="#0C408E" backcolor="#000000"/>
+					<box topPadding="0" leftPadding="0"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Revenu réalisé :]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="38" splitType="Stretch">
+			<staticText>
+				<reportElement x="130" y="0" width="275" height="38" forecolor="#0C408E"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fiche Produit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="441" y="0" width="14" height="20"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Le]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement x="455" y="0" width="100" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd.MM.yyyy").format(new Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="21">
+			<textField isBlankWhenNull="false">
+				<reportElement x="147" y="0" width="146" height="20" isRemoveLineWhenBlank="true"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{participant_id}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement positionType="FixRelativeToBottom" x="293" y="0" width="137" height="20" isRemoveLineWhenBlank="true"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<line>
+				<reportElement x="2" y="0" width="553" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="219" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" / "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="299" y="0" width="40" height="15"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

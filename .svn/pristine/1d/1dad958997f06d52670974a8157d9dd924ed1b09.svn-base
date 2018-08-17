@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data> 
+	<record model="ir.ui.view" id="crm_dash_kanban_view">
+	<field name="name">crm.dash.kanban</field>
+	<field name="model">crm.dashboard</field>
+	<field name="type">kanban</field>
+	<field name="arch" type="xml">
+        <kanban class="oe_background_grey" create="0">
+	    <!--list of field to be loaded -->
+            <field name="id"/>
+            <field name="type"/>
+	    <field name="show_on_dashboard"/>
+	    <field name="kanban_dashboard"/>
+	    <field name="name" />
+
+	    <templates> <!--defines a list of QWeb templates.-->
+	<!--Your Qweb based template goes here, each record will be wrapped in template so you can arrange field veyr easily in box -->
+		<t t-name="kanban-box">
+ 			<div t-attf-class="oe_kanban_color_#{kanban_getcolor(3)} oe_kanban_card oe_kanban_invoice">
+
+				<t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
+				<t t-value="record.type.raw_value" t-set="journal_type"/>
+				<t t-value="record.id" t-set="id_graph"/>
+				<t t-call="JournalTop"/>
+				<div class="o_kanban_card_content o_visible">  
+                                    <div class="row">
+					<t t-if="(journal_type == 'opportunity')" t-call="JournalBodyOppor"/>
+				    </div>
+                                    <div class="row">
+					<t t-if="(journal_type == 'activity')" t-call="JournalBodyActivity"/>
+				    </div>
+                                    <div class="row">
+					<t t-if="(journal_type == 'product')" t-call="JournalBodyProduct"/>
+				    </div>
+		                    <t t-if="(journal_type == 'opportunity')" t-call="JournalBodyGraph"/>
+				    <t t-if="(journal_type == 'activity')" t-call="JournalBodyGraphAct"/>
+				    <t t-if="(journal_type == 'product')" t-call="JournalBodyGraphPro"/>
+		                </div>
+		        </div>
+ 		</t>
+
+		<t t-name="JournalTop">
+                        <div class="o_kanban_card_header">
+                            <div class="o_kanban_card_header_title">
+                                <h3 class="text-center">
+                                    <strong><field name="name"/></strong>
+                                </h3>
+                            </div>
+                        </div>
+                </t>
+                <t t-name="JournalBodyOppor">
+                        <div class="col-xs-15  text-center ">
+                            <div class="row">
+                                <div class="col-xs-15  text-center">
+                                    <a type="object" name="open_action" >
+                                        <span title="Revenu"> Total Revenu par opportunité: <t t-esc="dashboard.planned_revenue"/> DT </span>
+				    </a>
+                                </div>
+			      </div>
+			</div>
+		</t>
+		<!-- -->
+		<t t-if="(journal_type == 'opportunity')" t-name="JournalBodyGraph">
+			<div class="o_kanban_graph_section">
+    				<field name="kanban_dashboard_graph" widget="kanban_graph" t-att-graph_type="_.contains(['opportunity'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+		<t t-if="(journal_type == 'activity')" t-name="JournalBodyGraphAct">
+			<div class="o_kanban_graph_section">
+    				<field name="kanban_dashboard_graph_act" widget="kanban_graph" t-att-graph_type="_.contains(['activity'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+		<t t-if="(journal_type == 'product')" t-name="JournalBodyGraphPro">
+			<div class="o_kanban_graph_section">
+    				<field name="kanban_dashboard_graph_pro" widget="kanban_graph" t-att-graph_type="_.contains(['product'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+		<!-- -->
+		<t t-name="JournalBodyActivity">
+                        <div class="col-xs-15  text-center ">
+                            <div class="row">
+                                <div class="col-xs-15 text-center">
+                                    <a type="object" name="open_action" >
+		                            <span title="Revenu Activité">Total Revenu par activité : </span>
+		                            <span><t t-esc="dashboard.planned_revenue_act"/> DT</span>
+
+
+
+				    </a>
+                                </div>
+
+                                <div class="col-xs-15 text-center">
+                                    <a type="object" name="open_action" >
+		                            <span title="Nombre Activité">Nombre d'activité Prochaine : </span>
+		                            <span><t t-esc="dashboard.number_activity_pro"/></span>
+				    </a>
+                                </div>  
+                            </div>        
+                        </div>
+                </t>
+
+		<t t-name="JournalBodyProduct">
+                        <div class="col-xs-15  text-center ">
+                            <div class="row">
+                                <div class="col-xs-15 text-center">
+                                    <a type="object" name="open_action" >
+		                            <span title="Revenu Produit">Total Revenu par produit : </span>
+		                            <span><t t-esc="dashboard.planned_revenue_pro"/> DT</span>
+				    </a>
+                                </div>
+                            </div>  
+                        </div>
+                </t>
+
+	    </templates>
+	</kanban>
+	</field>
+	</record>
+
+	<record id="action_custom_modul_form" model="ir.actions.act_window">
+		<field name="name">Tableau De Bord</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">crm.dashboard</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">kanban,form</field>
+        	<field name="context">{}</field>
+		<field name="domain">['|','|',('type', '=', 'opportunity'),('type', '=', 'activity'),('type', '=', 'product')]</field>
+	</record>
+
+
+        <menuitem id="menu_crm_dashboard" name="CRM Tableau de bord" parent="base.menu_base_partner" sequence="3"/> 
+        <menuitem id="menu_crm_dashboard_child" name="Tableau de bord" parent="menu_crm_dashboard" action="action_custom_modul_form"/> 
+  </data> 
+</openerp>
+

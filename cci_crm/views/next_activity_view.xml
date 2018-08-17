@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+<!--******************************Opportunity inherit*****************************************-->
+        <record model="ir.ui.view" id="crm_lead_form_view_in_crm_inherit">
+            <field name="name">crm.lead.form.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_action']" position="before">
+                <field name="type_act"/>
+                <label for="date_action" String='Le' attrs="{'invisible': [('type_act', '=', False)],'required': [('type_act','!=',False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='title_action']" position="attributes">
+                <attribute name='attrs'>{'required': [('type_act','!=',False)]}</attribute>
+            </xpath>
+
+                <!--xpath expr="//field[@name='priority']" position="after">
+                    <button string="Terminer" name="closed_action" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('type_act', '=', False)]}"/>
+                </xpath-->
+
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="next_activity_tree_view">
+            <field name="name">Activité Prochaine</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <tree string="Next Activity Tree" colors="red:date_deadline and (date_deadline &lt; current_date)"> 
+
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="date_action"/>
+		            <field name="type_act"/>
+                    <field name="title_action"/>
+		            <field name="planned_revenue"/>
+                    <field name="date_deadline"/> 
+		            <button name="show_activity" string="Planifier l'activité" type="object" icon="gtk-redo" context="{'default_subject':False, 'default_name':False, 'default_recipient_ids':False, 'default_partner_ids':False, 'default_start_datetime': False, 'default_partner_id':False, 'default_opportunity_ids':False}"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="next_activity_menu_action">
+            <field name="name">Activité Prochaine</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_type">form</field>
+            <field name="domain">['|', '|',('type_act','ilike', 'Mail'),('type_act','ilike', 'Appel'),('type_act','ilike', 'Reunion')]</field>
+            <field name="view_id" ref="next_activity_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+
+
+
+
+        <!--MENU
+                -->
+
+
+
+</data>
+</openerp>

@@ -1,0 +1,10 @@
+from openerp.osv import fields, osv
+
+class cci_crm(osv.Model):
+    _inherit = "crm.lead"
+    _columns = {
+        'categ_id':fields.many2one('product.category',string="categorie"),
+
+    }
+
+

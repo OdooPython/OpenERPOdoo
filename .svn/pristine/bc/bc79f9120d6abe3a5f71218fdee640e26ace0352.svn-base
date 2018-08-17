@@ -1,0 +1,241 @@
+# -*- coding: utf-8 -*-
+
+from openerp.osv import fields, osv
+import urllib2
+import urllib, json
+import simplejson
+import requests
+from six.moves.urllib.request import urlopen
+from random import randint
+
+class cci_crm_infocham(osv.Model):
+    _name = 'cci.crm.infocham'
+
+    _columns = {
+	'code_cci':fields.integer('Code CCI'),
+	}
+
+    def get_operateur(self, cr, uid, ids, context=None):
+	code_cci=self.browse(cr,uid,ids,context=context).code_cci
+	url="http://192.168.111.44/ws/adhesion/cci/"+str(code_cci)
+	r = requests.get(url)
+	print "type",type(r.json()) 
+	r.encoding = 'utf-8'
+	list_raison_sociale=[]
+	list_adhesion=[]
+	try:
+	    foo = json.loads(r.text, 'utf-8')
+	    print "Yay, I got a json !"
+
+	    #récuperer les modules 
+	    res_partner = self.pool.get('res.partner')
+	    product_temp = self.pool.get('product.template')
+	    membership_line = self.pool.get('membership_membership_line')
+	    partner_category = self.pool.get('res_partner_category')
+	    
+	    #créer une référence aéatoire pour l'adhésion
+	    ref=randint(1, 100)
+
+	    #cr.execute('SELECT name FROM res_partner_category')
+	    #lines_secteurs = cr.dictfetchall()
+
+
+            for partner in foo:	   	
+	        #recuperer les deux listes
+		adhesion_list = partner['adhesion']
+		inscription_list = partner['inscription']
+		personnes_list = partner['personnes']
+		print 'adhesion.....',adhesion_list,'\ninscription.....',inscription_list,'\npersonnes_list.....',personnes_list
+
+		#The method get() returns a value for the given key. If key is not available then returns default value None.
+		#recuperer les données des adhesions 
+		type_adh =adhesion_list.get('type')
+		montant_adhesion = adhesion_list.get('montant_adhesion')
+		date_adhesion = adhesion_list.get('date_adhesion')
+
+
+		#les valeurs à ajouter dans product_template dont le type=service
+		vals_adh = {
+			'name':type_adh,
+			'list_price':montant_adhesion,
+			'type':'service',
+			'membership':True,
+			'membership_date_from':date_adhesion,
+			'default_code': 'ad'+str(ref),
+		}
+		print 'vals_adh ....',vals_adh
+
+	        #récuperer les informations à comparer a propos l'adhesion
+	        cr.execute('SELECT name FROM product_template WHERE type=%s',('service',))
+	        lines_product = cr.dictfetchall()
+		for adhesion in lines_product:
+	    		name_adhesion = adhesion['name']
+			list_adhesion.append(name_adhesion)
+
+
+		print 'list_adhesion....',list_adhesion
+		if type_adh in list_adhesion:
+			print "existe ........."
+
+			#search(cr, uid, [('name', '=', name)])
+			#browse(cr, uid,id)
+
+			adh_ids=self.pool.get('product.template').search(cr,uid,[('name', '=',type_adh)])
+			print 'adh_ids.......',adh_ids
+
+			adh_id=self.pool.get('product.template').browse(cr,uid,adh_ids).id
+			print 'adh_id.......',adh_id
+			update_adhesion_id=product_temp.write(cr,uid,adh_id,vals_adh,context=context)
+			print 'update_adhesion_id.......',update_adhesion_id
+		else :
+			print "adhesion n'existe pas ....."
+			adhesion_id=product_temp.create(cr,uid,vals_adh,context=context)
+			print 'adhesion_id ....',adhesion_id
+
+		#recuperer les données des inscriptions
+		nom = inscription_list.get('nom')
+		prenom = inscription_list.get('prenom')
+		secteur_activite = inscription_list.get('secteur_activite')
+		matricule_fisc = inscription_list.get('matricule_fisc')
+		web_siege = inscription_list.get('web_siege')
+		email_siege = inscription_list.get('email_siege')
+		adresse = inscription_list.get('adresse')
+		code_postale = inscription_list.get('code_postale')
+		localite = inscription_list.get('localite')
+		gouvernerat = inscription_list.get('gouvernerat')
+		telephone = inscription_list.get('telephone')
+		raison_sociale = inscription_list.get('raison_sociale')
+		print 'gouvernerat .....',gouvernerat
+
+		#récupérer secteur
+		category_ids=self.pool.get('res.partner.category').search(cr,uid,[('name', '=',secteur_activite)])
+		category_id=self.pool.get('res.partner.category').browse(cr,uid,category_ids).id
+		print 'secteur category_id.......',category_id
+
+		#contact premier responsable 
+		email = inscription_list.get('email')
+		nom_resp = inscription_list.get('nom_premier_resp')
+		prenom_resp = inscription_list.get('prenom_premier_resp')
+		fonction = inscription_list.get('type_operateur')
+
+		
+		print 'heyyyyyyy ......'
+
+
+
+	        cr.execute('SELECT name, id, email, membership_state FROM res_partner')
+	        lines_partner = cr.dictfetchall()
+		print "lines_partner .......",lines_partner
+	        for line in lines_partner:
+			membership_state = line['membership_state']
+			partner_membership_id = line['id']
+			name = line['name']
+			print 'raison_sociale name .....',name
+			list_raison_sociale.append(name)
+		print "list_raison_sociale .....",list_raison_sociale
+
+		if raison_sociale in list_raison_sociale:
+		#il existe
+			print '.......existe on va le modifier ...',membership_state
+			part_ids=self.pool.get('res.partner').search(cr,uid,[('name', '=',raison_sociale)])
+			part_id=self.pool.get('res.partner').browse(cr,uid,part_ids).id
+			print 'part_ids.......',part_ids,part_id
+			#vérifier s'il a une adhésion sinon ajouter son adhesion 
+			if membership_state == 'paid':
+				print 'c bon...'
+				#update_partner_id=res_partner.write(cr,uid,part_id,vals_op,context=context)
+				#print 'update_partner_id.....',update_partner_id
+			else : 
+				print 'non...'
+				vals_adh_partner_existe = {
+					'state':'paid',
+					'member_price':montant_adhesion,
+					'membership_id':partner_membership_id,
+				}
+				member_line_existe_id=membership_line.create(cr,uid,part_id,vals_adh_partner_existe,context=context)
+				print 'member_line_existe_id.....',member_line_existe_id
+		else :
+		#n'existe pas
+			print "......n'existe pas"
+			#les valeurs à ajouter
+			vals_op = {
+				'name': raison_sociale,
+				'website': web_siege,
+				'email': email_siege,
+				'street': adresse,
+				'zip': code_postale,
+				'city': gouvernerat,
+				'phone': telephone,
+				#'category_id': category_id,
+				'is_company': True,
+				'matricule_fiscale':matricule_fisc,
+			}
+			print 'vals_op.....',vals_op
+			partner_id=res_partner.create(cr,uid,vals_op,context=context)
+			print 'partner_id.....',partner_id
+			cr.execute('INSERT INTO res_partner_res_partner_category_rel (category_id,partner_id) VALUES =%s',(category_id,partner_id,))
+
+			#vals_adhesion = {
+			#	'state':'paid',
+			#	'member_price': montant_adhesion,
+			#	'membership_id': partner_id,
+			#}
+			#member_line_id=membership_line.create(cr,uid,vals_adh_partner,context=context)
+			#print 'member_line_id.....',member_line_id
+
+			#test des contact responsable et personnes 
+			name_resp=nom_resp +" "+ prenom_resp
+			print 'name_resp .....',name_resp
+
+			vals_reponsable = {
+				'name': name_resp,
+				'email': email,
+				'street': adresse,
+				'zip': code_postale,
+				'city': gouvernerat,
+				'mobile': telephone,
+				'function':fonction,
+				#'category_id': category_id,
+				'is_company': False,
+				'parent_id': partner_id,
+				'matricule_fiscale':matricule_fisc,
+			}
+			print 'vals_reponsable.....',vals_reponsable
+			responsable_id=res_partner.create(cr,uid,vals_reponsable,context=context)
+			print 'responsable_id.....',responsable_id
+			cr.execute('INSERT INTO res_partner_res_partner_category_rel (category_id,partner_id) VALUES =%s',(category_id,responsable_id,))
+			
+			#recuperer les données des personnes (contact)
+			for personne in personnes_list:
+				first_name = personne.get('first_name')
+				last_name = personne.get('last_name')
+				mail = personne.get('mail')
+				phone = personne.get('phone')
+				qualification = personne.get('qualification')
+				print "personne ...",personne
+
+				name_personne=first_name+" "+last_name
+				print 'name_personne .....',name_personne
+				vals_personnes = {
+					'name': name_personne,
+					'email': mail,
+					'street': adresse,
+					'zip': code_postale,
+					'city': gouvernerat,
+					'mobile': phone,
+					'function':qualification,
+					#'category_id': category_id,
+					'is_company': False,
+					'parent_id': partner_id,
+				}
+				print 'vals_personnes.....',vals_personnes
+				personne_id=res_partner.create(cr,uid,vals_personnes,context=context)
+				print 'personne_id.....',personne_id
+				cr.execute('INSERT INTO res_partner_res_partner_category_rel (category_id,partner_id) VALUES =%s',(category_id,personne_id,))
+	except Exception, e:
+	    print "Why didn't i get a json ? Maybe it wasn't a json..."
+	    print "What is it then? It seems is a {0} whose length is {1}".format(
+		r.text.__class__, len(r.text)
+	    )
+
+	return True

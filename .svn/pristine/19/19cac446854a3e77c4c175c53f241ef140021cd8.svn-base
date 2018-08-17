@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+<!--==================== wizard View ==================-->
+        <record id='wizard_fiche_product_view' model="ir.ui.view">
+            <field name="name">Fiche Produit</field>
+            <field name="model">cci.wizard.fiche.product</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Rapport Fiche Produit" >
+                    <group col="2" fill="0" colspan="4">
+
+                        <field name="product_id" domain="[('type','!=', 'service'),('type','!=', 'visite')]"/>
+                        <group colspan="2">
+                            <div class="oe_button_box oe_right">
+				<button special="cancel" icon="gtk-cancel" string="Cancel"/>
+	                        <button type="object" name="create_report" icon="gtk-go-forward" string="Creer Rapport"/>
+			    </div>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_wizard_fiche_product">
+            <field name="name">Fiche Produit</field>
+            <field name="res_model">cci.wizard.fiche.product</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_fiche_product_view"/>
+            <field name="target">new</field>
+        </record>
+
+	 <menuitem id="submenu_wizard_fiche_product_report" name="Fiche produit" action="action_wizard_fiche_product"
+                  parent="menu_wizard_claim_list_report"/>
+<!--==================== report spec ========================-->
+        <report string="Fiche Produit"
+		model="crm.lead"
+		auto="True"
+		name="jasper_fiche_product_print"
+		rml="cci_stat/Fiche_product/report/report_fiche_product.jrxml"
+		id="fiche_product"
+		menu="False"
+		/>
+
+    </data>
+</openerp>
+
+
+

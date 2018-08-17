@@ -1,0 +1,82 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="document_prod_form_view">
+            <field name="name">document.form</field>
+            <field name="model">cci.document.alfresco.produit</field>
+            <field name="arch" type="xml">
+                <form string="Document produit Form">
+                    <sheet>
+                        <group>
+                            <field name="node" invisible="True"/>
+                            <field name="nom_fichier" string="Nom de fichier"/>
+                            <field name="description" string="Description"/>
+                        </group>
+                        <group>
+                            <button name="download_document" type="object"
+                                    string="Télécharger Document" class="oe_highlight oe_right" context="{'node': node,'nom_fichier':nom_fichier}" icon='STOCK_GOTO_BOTTOM'/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="document_prod_tree_view">
+            <field name="name">document.tree</field>
+            <field name="model">cci.document.alfresco.produit</field>
+            <field name="arch" type="xml">
+                <tree string="Document produit Tree">
+                    <field name="nom_fichier" string="Nom de fichier"/>
+                    <field name="description" string="Description"/>
+                    <field name="produit_id" string="Produit"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="product_normal_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.normal.form.view.inherit</field>
+            <field name="model">product.template</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Pieces jointes">
+                        <tree create="false">
+                            <field name="document_ids">
+                                <tree string="documents" create="false">
+                                    <field name="node" invisible="True"/>
+                                    <field name="nom_fichier"/>
+                                    <field name="description"/>
+                                    <button name="download_document" type="object"
+                                    string="Télécharger Document" class="oe_highlight oe_right" context="{'node': node,'nom_fichier':nom_fichier}" icon='STOCK_GOTO_BOTTOM'/>
+                                </tree>
+                            </field>
+                            <button name="ajout" type="object"
+                                    string="Attacher un document" class="oe_edit_only"
+                                    context="{'produit_id': active_id,'name': name,'default_code':default_code}" icon='STOCK_ADD'/>
+                        </tree>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="document_produit_action">
+            <field name="name">Documents Produits</field>
+            <field name="res_model">cci.document.alfresco.produit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="document_prod_tree_view"/>
+        </record>
+
+        <menuitem id="document_menu_crm" name="Documents" parent="docu_menu_crm"
+                  sequence="2"/>
+
+        <menuitem id="documents_produits_menu" name="Produits" parent="document_menu_crm"
+                  action="document_produit_action"
+                  sequence="7"
+        />
+
+    </data>
+</openerp>

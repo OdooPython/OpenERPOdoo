@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+{
+    'name' : 'CRM TABLEAUX DE BORD',
+    'description': "Tableau de bord des opportunités, des activités et des revenus par produit vue Kanban",
+    'version': '8.0.1.0.0',
+    'category': 'CRM',
+    'author' : 'Marwa BEN MESSAOUD & Salwa KSILA I-WAY',
+    'complexity': 'normal',
+    'website': '',
+    'data': [
+	'security/ir.model.access.csv',
+        'crm_dashboard_view.xml',
+    ],
+    'depends' : [
+        'crm',
+        'web_kanban_graph',
+    ],
+    'js': [],
+    'css': [],
+    'qweb': [],
+    "images": [
+		"static/description/example.jpg",
+	],
+    'installable': True,
+    'auto_install': False,
+}

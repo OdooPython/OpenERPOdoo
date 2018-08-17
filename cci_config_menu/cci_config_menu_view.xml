@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+	<!-- hide the top menuitem add by marwa 12-09-2017-->
+	<record model="ir.ui.menu" id="account.menu_finance">
+	    <field name="groups_id" eval="[(6,0,[ref('cci_config_groups.make_invisible')])]"/>
+	</record>
+
+	<record model="ir.ui.menu" id="hr.menu_hr_root">
+	    <field name="groups_id" eval="[(6,0,[ref('base.group_no_one')])]"/>
+	</record>
+
+	<record model="ir.ui.menu" id="base.menu_reporting">
+	    <field name="groups_id" eval="[(6,0,[ref('cci_config_groups.make_invisible')])]"/>
+	</record>
+
+	<record model="ir.ui.menu" id="base.marketing_menu">
+	    <field name="groups_id" eval="[(6,0,[ref('cci_config_groups.make_invisible')])]"/>
+	</record>
+
+	<!--hide document CRM -->
+	<record model="ir.ui.menu" id="cci_alfresco.docu_menu_crm">
+	    <field name="groups_id" eval="[(6,0,[ref('cci_config_groups.make_invisible')])]"/>
+	</record>
+
+	<!--hide association and change the parent 29-09-2017 -->
+        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="10" parent="base.menu_base_partner"/>
+
+      
+    </data>
+</openerp>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!--Avant VENTE-->
+        <record id="D1" model="crm.dashboard">
+            <field name="name">Opportunité Par Produit</field>
+            <field name="type">opportunity</field>
+        </record>
+
+        <record id="D2" model="crm.dashboard">
+            <field name="name">Activité Par Produit</field>
+            <field name="type">activity</field>
+        </record>
+
+        <record id="D3" model="crm.dashboard">
+            <field name="name">Revenu Par Produit</field>
+            <field name="type">product</field>
+        </record>
+
+        <!--Aprés VENTE-->
+
+        <record id="D4" model="crm.dashboard">
+            <field name="name">Chiffre d'affaire réalisé Par Département</field>
+            <field name="type">departement</field>
+        </record>
+
+        <record id="D5" model="crm.dashboard">
+            <field name="name">Chiffre d'affaire réalisé Par Commercial</field>
+            <field name="type">commercial</field>
+        </record>
+
+
+        <!--Opportunité-->
+	    <record id="E11" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunité Par État</field>
+            <field name="type_dash">state</field>
+        </record>
+
+        <record id="E21" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunité Par Commercial</field>
+            <field name="type_dash">ag</field>
+        </record>
+
+        <record id="E31" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunité Par Département</field>
+            <field name="type_dash">dep</field>
+        </record>
+
+
+        <record id="E14" model="crm.dashboard.opportunity">
+            <field name="name">Vision Financière Par État</field>
+            <field name="type_dash">vision_state</field>
+        </record>
+
+        <record id="E24" model="crm.dashboard.opportunity">
+            <field name="name">Vision Financière Par Département (Opportunité courante)</field>
+            <field name="type_dash">vision_dep</field>
+        </record>
+
+        <record id="E34" model="crm.dashboard.opportunity">
+            <field name="name">Vision Financière Par Commercial (Opportunité courante)</field>
+            <field name="type_dash">vision_ag</field>
+        </record>
+
+        <record id="E15" model="crm.dashboard.opportunity">
+            <field name="name">Chiffre d'Affaire</field>
+            <field name="type_dash">chiffre</field>
+        </record>
+
+        <record id="E25" model="crm.dashboard.opportunity">
+            <field name="name">Chiffre d'Affaire prévisible Par Département</field>
+            <field name="type_dash">ca_dep</field>
+        </record>
+
+        <record id="E10" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'opportunités par opérateur TOP 10</field>
+            <field name="type_dash">operateur</field>
+        </record>
+
+
+        <record id="E12" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunités Gagné Par Commercial</field>
+            <field name="type_dash">opportunity_won</field>
+        </record>
+
+        <record id="E121" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunités Perdu Par Commercial</field>
+            <field name="type_dash">opportunity_lost</field>
+        </record>
+
+        <record id="E221" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunités Perdu Par Département</field>
+            <field name="type_dash">op_dep_lost</field>
+        </record>
+        <record id="E222" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunités Gagné Par Département</field>
+            <field name="type_dash">op_dep_won</field>
+        </record>
+
+
+        
+
+
+        <record id="E13" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunités Gagné Par Commercial durant ces 30 derniers jours</field>
+            <field name="type_dash">period_won</field>
+        </record>
+
+        <record id="E23" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunités Perdu Par Commercial durant ces 30 derniers jours</field>
+            <field name="type_dash">period_lost</field>
+        </record>
+
+        <record id="E33" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunités Perdu Par Département durant ces 30 derniers jours</field>
+            <field name="type_dash">op_lost</field>
+        </record>
+        <record id="E43" model="crm.dashboard.opportunity">
+            <field name="name">Nombre d'Opportunités Gagné Par Département durant ces 30 derniers jours </field>
+            <field name="type_dash">op_won</field>
+        </record>
+
+        <!--Activité-->
+        <record id="E17" model="crm.dashboard.activity">
+            <field name="name">Nombre d'email envoyé par activité</field>
+            <field name="type_dash">email</field>
+        </record>
+        <record id="E18" model="crm.dashboard.activity">
+            <field name="name">Nombre d'appel effectué par activité</field>
+            <field name="type_dash">appel</field>
+        </record>
+        <record id="E19" model="crm.dashboard.activity">
+            <field name="name">Nombre de réunion effectué par activité</field>
+            <field name="type_dash">reunion</field>
+        </record>
+    
+    </data>
+</openerp>

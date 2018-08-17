@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+    <!-- Phonecalls Form View Update by Marwa BM 04-08-2017-->
+    <record model="ir.ui.view" id="crm_case_phone_form_view_inherit">
+        <field name="name">CRM - Phone Call Form inherit</field>
+        <field name="model">crm.phonecall</field>
+        <field name="inherit_id" ref="crm.crm_case_phone_form_view"/>
+        <field name="arch" type="xml">
+		<xpath expr="//field[@name='partner_id']" position="attributes">
+			<attribute name="domain">[('is_company','=', True)]</attribute>
+			<attribute name="string">Partenaire</attribute>
+		</xpath>
+
+		<xpath expr="//field[@name='partner_id']" position="after">
+			<field name='partner_contact_id' domain="[('parent_id','=', partner_id)]"/>
+                </xpath>
+
+		<xpath expr="//button[@name='action_button_convert2opportunity']" position="attributes">
+			<attribute name="invisible">1</attribute>
+		</xpath>
+
+                <xpath expr="//field[@name='opportunity_id']" position="attributes"> 
+			<attribute name="domain">[('partner_id','=', partner_id)]</attribute>
+                </xpath>
+
+        </field>
+    </record>
+
+    <!-- Phonecalls tree View Update by Marwa BM 04-08-2017-->
+    <record model="ir.ui.view" id="crm_case_inbound_phone_tree_view_inherit">
+        <field name="name">CRM - Logged Phone Calls Tree inherit</field>
+        <field name="model">crm.phonecall</field>
+        <field name="inherit_id" ref="crm.crm_case_inbound_phone_tree_view"/>
+        <field name="arch" type="xml">
+
+		<xpath expr="//field[@name='partner_id']" position="attributes">
+			<attribute name="domain">[('is_company','=', True)]</attribute>
+			<attribute name="string">Partenaire</attribute>
+		</xpath>
+		<xpath expr="//tree/field[@name='partner_id']" position="after">
+			<field name='partner_contact_id' domain="[('parent_id','=', partner_id)]"/>
+                </xpath>
+
+                <xpath expr="//field[@name='opportunity_id']" position="attributes"> 
+			<attribute name="invisible">0</attribute>
+			<attribute name="domain">[('partner_id','=', partner_id)]</attribute>
+                </xpath>
+                <xpath expr="//field[@name='opportunity_id']" position="after"> 
+                	<button name="closed_action_call" string="Terminer" type="object" icon="terp-gtk-stop"/>
+                </xpath>
+
+		<xpath expr="//tree/button[@name='action_button_convert2opportunity']" position="attributes">
+			<attribute name="invisible">1</attribute>
+		</xpath>
+		<!--Hide button 20-09-2017 by Marwa BM-->
+		<xpath expr="//tree/button[@name='action_make_meeting']" position="attributes">
+			<attribute name="invisible">1</attribute>
+		</xpath>
+
+		<xpath expr="//tree/button[@string='Schedule Other Call']" position="attributes">
+			<attribute name="invisible">1</attribute>
+		</xpath>
+
+        </field>
+    </record>
+
+    <!--update 20-09-2017 by Marwa BM-->
+    <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming0_inherit">
+        <field name="name">Appels Téléphoniques</field>
+        <field name="res_model">crm.phonecall</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree,calendar</field>
+        <field name="view_id" ref="crm.crm_case_inbound_phone_tree_view"/>
+        <field name="domain">['|',('user_id', '=', uid),('opportunity_id.section_id.user_id.id', '=', uid)]</field>
+        <field name="context">{'search_default_state': '', 'default_state': ''}</field>
+    </record>
+
+	<!--Menu Appel téléphonique pour les chefs et les membres-->
+    <menuitem name="Appel téléphonique" id="menu_crm_case_phone_inbound"
+        parent="test_menu_crm_config_activity"
+        action="crm_case_categ_phone_incoming0_inherit" />
+
+	<record id="menu_crm_case_phone_inbound" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('cci_config_groups.group_coach_cci'),ref('cci_config_groups.group_user_cci')])]"/>
+	</record>
+
+    <!--add 25-09-2017 by Marwa BM-->
+    <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming0_inherit_admin">
+        <field name="name">Appels Téléphoniques</field>
+        <field name="res_model">crm.phonecall</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree,calendar</field>
+        <field name="view_id" ref="crm.crm_case_inbound_phone_tree_view"/>
+        <field name="context">{'search_default_state': '', 'default_state': ''}</field>
+    </record>
+	<!--Menu Appel téléphonique pour l'admin-->
+    <menuitem name="Appel téléphonique" id="menu_crm_case_phone_inbound_admin"
+        parent="test_menu_crm_config_activity"
+        action="crm_case_categ_phone_incoming0_inherit_admin" />
+
+	<record id="menu_crm_case_phone_inbound_admin" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one')])]"/>
+	</record>
+
+
+
+</data>
+</openerp>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!--ADDED BY SALWA KSILA Update By Marwa BM-->
+        <!-- After installation of the module, open the related menu-->
+	<record id="sec1" model="res.partner.category">
+            <field name="name">Bâtiment et Travaux publics</field>
+        </record>
+        <record id="sec2" model="res.partner.category">
+            <field name="name">Travaux publics</field>
+        </record>
+        <record id="sec3" model="res.partner.category">
+            <field name="name">Menuiserie,Bois,Meuble et Ameublement</field>
+        </record>
+        <record id="sec4" model="res.partner.category">
+            <field name="name">Huile Olive</field>
+        </record>
+	<!--les secteurs pour INFOCHAM local -->
+        <record id="sec5" model="res.partner.category">
+            <field name="name">Activité de production et d'industrie culturelle</field>
+        </record>
+        <record id="sec6" model="res.partner.category">
+            <field name="name">Autres secteurs</field>
+        </record>
+        <record id="sec7" model="res.partner.category">
+            <field name="name">Communication</field>
+        </record>
+        <record id="sec8" model="res.partner.category">
+            <field name="name">Education et enseignement</field>
+        </record>
+        <record id="sec9" model="res.partner.category">
+            <field name="name">Etudes, conseils d'expertises et d'assistance</field>
+        </record>
+        <record id="sec10" model="res.partner.category">
+            <field name="name">Formation professionnelle</field>
+        </record>
+
+        <record id="sec11" model="res.partner.category">
+            <field name="name">Loisir</field>
+        </record>
+        <record id="sec12" model="res.partner.category">
+            <field name="name">Promotion immobilière</field>
+        </record>
+        <record id="sec13" model="res.partner.category">
+            <field name="name">Protection de l'environnement</field>
+        </record>
+        <record id="sec14" model="res.partner.category">
+            <field name="name">Recherche- développement</field>
+        </record>
+        <record id="sec15" model="res.partner.category">
+            <field name="name">Santé</field>
+        </record>
+        <record id="sec16" model="res.partner.category">
+            <field name="name">Service Informatique</field>
+        </record>
+        <record id="sec17" model="res.partner.category">
+            <field name="name">Transport</field>
+        </record>
+<!--infocham test -->
+        <record id="sec18" model="res.partner.category">
+            <field name="name">Activités de services administratifs et de soutien</field>
+        </record>
+
+        <record id="sec19" model="res.partner.category">
+            <field name="name">Activités des ménages en tant qu'employeurs</field>
+        </record>
+
+        <record id="sec20" model="res.partner.category">
+            <field name="name">Activités extra territoriales</field>
+        </record>
+
+        <record id="sec21" model="res.partner.category">
+            <field name="name">Activités financières et d'assurance</field>
+        </record>
+
+        <record id="sec22" model="res.partner.category">
+            <field name="name">Activités immobilières</field>
+        </record>
+
+        <record id="sec23" model="res.partner.category">
+            <field name="name">Administration publique</field>
+        </record>
+
+        <record id="sec24" model="res.partner.category">
+            <field name="name">Agriculture, Sylviculture Et Pêche</field>
+        </record>
+
+        <record id="sec25" model="res.partner.category">
+            <field name="name">Arts, spectacles et activités récréatives</field>
+        </record>
+
+        <record id="sec26" model="res.partner.category">
+            <field name="name">Autres activités de services</field>
+        </record>
+
+        <record id="sec27" model="res.partner.category">
+            <field name="name">Commerce</field>
+        </record>
+
+        <record id="sec28" model="res.partner.category">
+            <field name="name">Construction</field>
+        </record>
+
+        <record id="sec29" model="res.partner.category">
+            <field name="name">Enseignement</field>
+        </record>
+
+        <record id="sec30" model="res.partner.category">
+            <field name="name">Hébergement et restauration</field>
+        </record>
+
+        <record id="sec31" model="res.partner.category">
+            <field name="name">Industries manufacturières</field>
+        </record>
+
+        <record id="sec32" model="res.partner.category">
+            <field name="name">Industries extractives</field>
+        </record>
+
+
+        <record id="sec33" model="res.partner.category">
+            <field name="name">Information et communication</field>
+        </record>
+
+        <record id="sec34" model="res.partner.category">
+            <field name="name">Production et distribution d'eau, assainissement, gestion des déchets et dépolluion</field>
+        </record>
+
+        <record id="sec35" model="res.partner.category">
+            <field name="name">Production et distribution d'électricité, de gaz, de vapeur et d'air conditionné</field>
+        </record>
+
+        <record id="sec36" model="res.partner.category">
+            <field name="name">Santé humaine et action sociale</field>
+        </record>
+        
+        <record id="sec37" model="res.partner.category">
+            <field name="name">Transports et entreposage</field>
+        </record>
+        <record id="sec38" model="res.partner.category">
+            <field name="name">Secteur des industries chimiques</field>
+        </record>
+        <record id="sec39" model="res.partner.category">
+            <field name="name">Industries manufacturieres</field>
+        </record>
+
+
+
+
+    </data>
+</openerp>

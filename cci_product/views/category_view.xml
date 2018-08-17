@@ -1,0 +1,28 @@
+<openerp>
+    <data>
+
+        <menuitem action="product.product_category_action"  id="product.menu_products_category" parent="base.menu_product" sequence="30" groups="base.group_user"/>
+
+
+        <record id="product_attribute_category_inherit" model="ir.ui.view">
+            <field name="name">product_attribute_category_inherit</field>
+            <field name="model">product.category</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+
+                    <xpath expr="//group[@name='parent']" position="after">
+                        <group name="attribute_category" string="Caractéristiques" colspan="15">
+				<field name="attributes_ids" align="right"/>
+			</group>
+                    </xpath>
+                    <xpath expr="//group[@name='account_property']" position="replace"/>
+
+
+            </field>
+        </record>
+
+
+    </data>
+</openerp>
+         

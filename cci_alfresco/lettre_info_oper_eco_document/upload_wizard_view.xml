@@ -1,0 +1,25 @@
+<openerp>
+    <data>
+
+<record model="ir.ui.view" id="wizard_form_view4">
+    <field name="name">wizard.form</field>
+    <field name="model">cci.document.ope.eco.wizard</field>
+    <field name="arch" type="xml">
+        <form>
+            <group col="3">
+                <field name="chemin" string=" " width="634" filename="nom_fichier"/>
+            </group>
+            <group>
+                <field name="nom_fichier"/>
+                <field name="description"/>
+            </group>
+
+            <footer>
+                <button name="upload_document" type="object"
+                        string="Ajouter" class="oe_highlight"/>
+            </footer>
+        </form>
+    </field>
+</record>
+    </data>
+</openerp>

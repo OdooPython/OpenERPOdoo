@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="product_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="OPENERP_RELATIONS" value="[&apos;product_sector_ids&apos;]"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/mbenmessaoud/Odoo_ERP_Project/addons_CCI_Demo/jasper_reports/custom_reports/"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="xPath">
+		<![CDATA[]]>
+	</queryString>
+	<field name="Reference_interne-default_code" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Reference_interne-default_code]]></fieldDescription>
+	</field>
+	<field name="Nom-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Nom-name]]></fieldDescription>
+	</field>
+	<field name="Nom-name2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Categorie_interne-categ_id/Nom-name]]></fieldDescription>
+	</field>
+	<field name="Nom_complet-complete_name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Secteurs_d_activite-product_sector_ids/Nom_complet-complete_name]]></fieldDescription>
+	</field>
+	<group name="product_group">
+		<groupExpression><![CDATA[$F{Nom-name}]]></groupExpression>
+		<groupHeader>
+			<band height="75">
+				<staticText>
+					<reportElement x="62" y="33" width="135" height="20" forecolor="#0C408E" backcolor="#B6D6F7"/>
+					<textElement textAlignment="Left">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Désignation             :]]></text>
+				</staticText>
+				<rectangle radius="10">
+					<reportElement x="43" y="6" width="147" height="22" forecolor="#0C408E" backcolor="#B6D6F7"/>
+				</rectangle>
+				<textField>
+					<reportElement x="197" y="53" width="202" height="20" backcolor="#B6D6F7"/>
+					<textElement textAlignment="Left"/>
+					<textFieldExpression><![CDATA[$F{Nom-name2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="118" y="8" width="72" height="20" backcolor="#B6D6F7"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Reference_interne-default_code}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="197" y="33" width="152" height="20" backcolor="#B6D6F7"/>
+					<textElement textAlignment="Left"/>
+					<textFieldExpression><![CDATA[$F{Nom-name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="44" y="8" width="74" height="20" forecolor="#0C408E" backcolor="#B6D6F7"/>
+					<box>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Référence ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="62" y="53" width="135" height="20" forecolor="#0C408E" backcolor="#B6D6F7"/>
+					<textElement textAlignment="Left">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Catégorie                 :]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="sector_group">
+		<groupExpression><![CDATA[$F{Reference_interne-default_code}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<staticText>
+					<reportElement x="62" y="2" width="120" height="20" forecolor="#0C408E"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Secteurs d'activité :]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement x="-1" y="20" width="556" height="32" forecolor="#0C408E"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Liste Des Produits]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="1" width="49" height="19"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Elaboré le :]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="484" y="0" width="71" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd.MM.yyyy").format(new Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="100" y="0" width="368" height="20"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{Nom_complet-complete_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="228" y="3" width="80" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" / "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="308" y="3" width="40" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="1" width="555" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

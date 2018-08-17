@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+	<record id="wkf_product" model="workflow">
+	    <field name="name">product.wkf</field>
+	    <field name="osv">product.template</field>
+	    <field name="on_create">True</field>
+	</record>
+
+	<!-- liste des activités-->
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_product"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+        </record>   
+
+        <record id="act_to_validate" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_product"/>
+            <field name="name">to validate</field>
+            <field name="kind">function</field>
+            <field name="action">draft_to_validate()</field>
+        </record>
+
+        <record id="act_validate" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_product"/>
+            <field name="name">validate</field>
+            <field name="kind">function</field>
+            <field name="action">to_validate()</field>
+        </record>
+
+
+	<!-- liste des transitions-->
+        <record id="trans_draft_to_validate" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_to_validate"/>
+            <field name="condition">True</field>
+            <field name="signal">a_valider_bt</field>
+        </record>
+
+        <record id="trans_to_validate_validate" model="workflow.transition">
+            <field name="act_from" ref="act_to_validate"/>
+            <field name="act_to" ref="act_validate"/>
+            <field name="condition">True</field>
+            <field name="signal">valider_bt</field>
+        </record>
+</data>
+</openerp>

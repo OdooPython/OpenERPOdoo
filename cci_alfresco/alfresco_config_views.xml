@@ -1,0 +1,59 @@
+<openerp>
+    <data>
+        <!--salwa ksila add 29/03/2017-->
+        <record model="ir.ui.view" id="alfresco_config_view_form">
+            <field name="name">cci.alfresco.configuration.form</field>
+            <field name="model">cci.alfresco.configuration</field>
+            <field name="arch" type="xml">
+                <form string="Configuration Alfresco Form">
+                    <group>
+                        <field name="url"/>
+                        <field name="port"/>
+                        <field name="user"/>
+                        <field name="mp" password="True"/>
+                        <field name="is_default" context="{'is_default': is_default}"/>
+
+                    </group>
+                    <footer>
+                        <button name="config_test" type="object" string="Tester la connection"
+                                class="oe_edit_only"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="dconfiguration_tree_view">
+            <field name="name">cci.alfresco.configuration.tree</field>
+            <field name="model">cci.alfresco.configuration</field>
+            <field name="arch" type="xml">
+                <tree string="Configuration tree">
+                    <field name="url"/>
+                    <field name="port"/>
+                    <field name="user"/>
+                    <field name="mp" password="True"/>
+                    <field name="is_default"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="alfresco_configuration_action">
+            <field name="name">Configuration du Alfresco</field>
+            <field name="res_model">cci.alfresco.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="docu_menu_crm" name="Documents CRM"/>
+        <menuitem id="main_config_menu_crm" name="Configuration Alfresco" parent="docu_menu_crm" sequence="1"/>
+
+        <!--menuitem id="main_documentation_menu_crm" name="Configuration CRM Alfresco" parent ="docu_menu_crm" sequence="1"/-->
+
+        <menuitem id="configurations_menu_crm" name="Configuration Alfresco" parent="base.menu_config"
+                  action="alfresco_configuration_action" sequence="1"/>
+
+        <menuitem id="document_menu_crm" name="Documents" parent="docu_menu_crm" sequence="2"/>
+
+
+    </data>
+</openerp>

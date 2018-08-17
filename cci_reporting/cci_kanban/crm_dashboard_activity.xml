@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data> 
+		<record model="ir.ui.view" id="crm_dash_act_view">
+		<field name="name">crm.dash.act.kanban</field>
+		<field name="model">crm.dashboard.activity</field>
+		<field name="type">kanban</field>
+		<field name="arch" type="xml">
+	        <kanban class="oe_background_grey" create="0">
+		    <!--list of field to be loaded -->
+				<field name="id"/>
+				<field name="type_dash"/>
+				<field name="show_on_dashboard"/>
+				<field name="kanban_dashboard"/>
+				<field name="name" />
+
+
+				<templates> 
+			<t t-name="kanban-box">
+	 			<div t-attf-class="oe_kanban_color_#{kanban_getcolor(3)} oe_kanban_card oe_kanban_invoice">
+					<t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
+					<t t-value="record.type_dash.raw_value" t-set="journal_type"/>
+					<t t-value="record.id" t-set="id_graph"/>
+					<t t-call="JournalTop"/>
+					<div class="o_kanban_card_content o_visible">  
+	                   
+			           <t t-if="(journal_type == 'email')" t-call="JournalBodyGraphEmail"/>
+			           
+					   <!--<t t-if="(journal_type == 'appel')" t-call="JournalBodyGraphAppel"/>-->
+					    
+					    <t t-if="(journal_type == 'reunion')" t-call="JournalBodyGraphReunion"/>
+				    
+
+					    
+			        </div>
+			    </div>
+	   
+	 		</t>
+
+				<t t-name="JournalTop">
+                        <div class="o_kanban_card_header">
+                            <div class="o_kanban_card_header_title">
+                                <h3 class="text-center">
+                                    <strong><field name="name"/></strong>
+                                </h3>
+                            </div>
+                        </div>
+                </t>
+
+		 <t t-if="(journal_type == 'email')" t-name="JournalBodyGraphEmail">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_activity_email" widget="kanban_graph" t-att-graph_type="_.contains(['email'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+<!--
+		 <t t-if="(journal_type == 'appel')" t-name="JournalBodyGraphAppel">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_activity_appel" widget="kanban_graph" t-att-graph_type="_.contains(['appel'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>-->
+
+		 <t t-if="(journal_type == 'reunion')" t-name="JournalBodyGraphReunion">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_activity_reunion" widget="kanban_graph" t-att-graph_type="_.contains(['reunion'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+	    </templates>
+
+
+
+			</kanban>
+		</field>
+		</record>
+
+
+		<record id="action_dash_activity_form" model="ir.actions.act_window">
+		<field name="name">Tableau De Bord</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">crm.dashboard.activity</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">kanban,form</field>
+        <field name="context">{}</field>
+		<field name="domain">['|','|',('type_dash', '=', 'email'),('type_dash', '=', 'appel'),('type_dash', '=', 'reunion')]</field>
+	</record>
+
+		<menuitem id="menu_dashboard_activity" name="Activité" parent="menu_crm_dashboard_before_sale" action="action_dash_activity_form"/> 
+	</data>
+</openerp>

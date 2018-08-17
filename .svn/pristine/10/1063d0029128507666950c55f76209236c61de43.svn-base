@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+<!--==================== wizard View ==================-->
+        <record id='wizard_opportunity_view' model="ir.ui.view">
+            <field name="name">Opportunité</field>
+            <field name="model">wizard.opportunity</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+		<form>
+
+		</form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_wizard_opportunity">
+            <field name="name">Opportunité</field>
+            <field name="res_model">wizard.opportunity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_opportunity_view"/>
+            <field name="target">new</field>
+        </record>
+        
+        <!--menuitem id="wizard_product_compagne" name="Lancer Compagne Marketing" action="action_wizard_product" parent="base.menu_product" sequence="60"/-->
+
+
+
+    </data>
+</openerp>

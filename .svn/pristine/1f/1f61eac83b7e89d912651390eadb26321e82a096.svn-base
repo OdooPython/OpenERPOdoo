@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+
+{
+	"name" : "CCI REPORTING",
+	"version" : "0.1",
+	"description" : """
+CCI REPORTING.
+========================
+CCI offre la possiblite d'imprimer des rapports spécifiques et de consulter les statistiques concernant les opportunités, les activités, les produits et ses revenus sous forme de tableau de bord """,
+
+	"author" : "Marwa BEN MESSAOUD I-WAY",
+	"website" : "http://www.iway-tn.com",
+
+	"depends" : ["base", "jasper_reports",'crm','web_kanban_graph',],
+	"category" : "Reporting",
+	"init_xml" : [],
+	"demo_xml" : [
+
+
+
+],
+    	"update_xml" :[],
+	"active": False,
+	"installable": True
+}
+

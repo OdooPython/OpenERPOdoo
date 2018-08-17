@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+        <delete model="ir.ui.menu" id="crm.menu_crm_case_phone_outbound"/>
+        <delete model="ir.ui.menu" id="crm.menu_crm_case_phone_inbound"/>
+        <delete model="ir.ui.menu" id="crm_helpdesk.menu_help_support_main"/>
+
+	<!-- Menu vant vente 30-10-2017
+        <menuitem id="menu_avant_vente" name="Service Avant Vente"
+                  parent="base.menu_base_partner" sequence="1" /> -->
+
+        <menuitem id="test_menu_crm_config_activity" name="Activités"
+                  parent="base.menu_base_partner" sequence="1" /> 
+
+	<menuitem id="menu_crm_config_activity_next" name="Activité Prochaine" parent="test_menu_crm_config_activity" action="cci_crm.next_activity_menu_action"/>
+
+	<!-- Menu activité cloturé pour admin add 16-10-2017-->
+	<menuitem id="menu_crm_config_activity_previous" name="Activité Cloturée" parent="test_menu_crm_config_activity" action="cci_crm.previous_activity_menu_action"/>
+	<record id="menu_crm_config_activity_previous" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one')])]"/>
+	</record>
+
+	<!-- Menu activité cloturé pour user add 16-10-2017-->
+	<menuitem id="menu_crm_config_activity_previous_user" name="Activité Cloturée" parent="test_menu_crm_config_activity" action="cci_crm.previous_activity_menu_action_user"/>
+
+	<record id="menu_crm_config_activity_previous_user" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('cci_config_groups.group_user_cci'),ref('cci_config_groups.group_coach_cci')])]"/>
+	</record>
+
+
+
+	<!-- hide devis and bon de commande for user_cci et coach_cci-->
+	<record id="sale.menu_sale_order" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one')])]"/>
+	</record>
+
+	<record id="sale.menu_sale_quotations" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one')])]"/>
+	</record>
+	<!-- hide leads for user_cci-->
+	<record id="crm.menu_crm_leads" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one'),ref('cci_config_groups.group_coach_cci')])]"/>
+	</record>
+
+
+
+
+	<!--record id="crm_claim.menu_crm_case_claims" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one'),ref('cci_product.group_coach_cci'),ref('cci_product.group_user_cci')])]"/
+	</record>-->
+
+
+
+
+
+
+
+</data>
+</openerp>

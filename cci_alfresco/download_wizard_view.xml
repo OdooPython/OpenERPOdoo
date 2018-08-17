@@ -1,0 +1,13 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="alfresco_form_view">
+            <field name="name">cci.download.wizard.form</field>
+            <field name="model">cci.download.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                   <field name="download_link" string=" " filename="nom_fichier"/>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

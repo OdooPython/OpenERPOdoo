@@ -1,0 +1,25 @@
+<openerp>
+	<data>
+		<record id="group_category" model="ir.module.category">
+		    <field name="name">Équipes commerciales</field>
+		    <field name="description"> Personnels commerciaux des CCI</field>
+		</record>
+
+		<record id="group_coach_cci" model="res.groups">
+		    <field name="name"> Responsable département</field>
+		    <field name="category_id" ref="group_category"/>
+		</record>
+
+		<record id="group_user_cci" model="res.groups">
+		    <field name="name"> Commercial département</field>
+		    <field name="category_id" ref="group_category"/>
+		</record>
+
+		<!-- hide the top menuitem add by marwa 12-09-2017-->
+		<record id="make_invisible" model="res.groups">
+		    <field name="name">Invisible</field>
+		</record>
+
+    	</data>
+</openerp>
+

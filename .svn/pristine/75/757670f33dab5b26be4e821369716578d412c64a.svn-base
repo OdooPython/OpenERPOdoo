@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--<record model="ir.ui.menu" id="base.menu_sales">
+            <field name="name">Sales</field>
+        </record>
+
+        <record model="ir.ui.menu" id="base.menu_base_partner">
+            <field name="name">CRM</field>
+        </record>
+
+
+
+
+	record model="ir.ui.menu" id="hr.menu_hr_root">
+	    <field name="groups_id" eval="[(6,0,[ref('base.group_no_one')])]"/>
+	</record
+
+
+	<record id="base.main_company" model="res.company">
+		<field name="name">Your company name</field>
+    		<field name="rml_header1">Your New Company Tagline</field>
+    		<field name="currency_id" ref="base.EUR"/>
+	</record>-->
+
+    <!--Ajouter le champ "propriètère" dans le formulaire d'ajout de configuration du serveur SMTP -->
+        <record id="ir_mail_server_form" model="ir.ui.view">
+            <field name="model">ir.mail_server</field>
+            <field name="inherit_id" ref="base.ir_mail_server_form"/>
+            <field name="arch" type="xml">
+                <field name="smtp_user" position="before">
+                    <field name="user_id" string="Propriétaire"/>
+                </field>
+            </field>
+        </record>
+    <!-- ************************************************************************************* -->
+
+
+
+    </data>
+</openerp>

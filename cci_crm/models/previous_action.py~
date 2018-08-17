@@ -1,0 +1,42 @@
+# -*- coding: utf-8 -*-
+
+from datetime import date, datetime
+from dateutil import relativedelta
+from openerp import tools
+from openerp.osv import fields, osv
+
+
+class crm_previous_activity(osv.Model):
+    _name = "crm.lead.activity"
+
+
+
+    _columns = {
+        'name':fields.char('Titre'),
+        'partner_id': fields.many2one('res.partner','Partenaire',required =True),
+        'date_deadline': fields.date(string='Date de fin',
+                                     help="Estimate of the date on which the opportunity will be won."),
+        'date_action': fields.date(string='Date début', select=True),
+        'title_action': fields.char(string='Titre de prochaine action'),
+        'priority': fields.selection([
+            ('0', 'Very Low'),
+            ('1', 'Low'),
+            ('2', 'Normal'),
+            ('3', 'High'),
+            ('4', 'Very High')], 'Priorité'),
+
+        'type': fields.selection([
+            ('Mail', "Email"),
+            ('Appel', "Appel"),
+	    ('Reunion',"Réunion"),
+
+        ], 'Type'),
+
+    }
+
+
+
+
+
+
+

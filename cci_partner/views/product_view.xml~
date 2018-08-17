@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+	<record id="product_oper_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.oper.form.view.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Fiche Produit">
+			<tree>
+				<field name="fiche_product_ids" string="Liste des produits"/>
+			</tree>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+	<record id="product_oper_form_view" model="ir.ui.view">
+            <field name="name">product.oper.form.view</field>
+            <field name="model">product</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+		<form string="Produits">
+ 			<sheet>
+                        <div class="oe_title">
+                            <label for="name_product" class="oe_edit_only"/>
+                            <h1>
+				<field name="name_product"/>
+                            </h1>
+                        </div>
+                    </sheet>
+		</form>
+            </field>
+        </record>
+
+	<record id="product_oper_tree_view" model="ir.ui.view">
+            <field name="name">product.oper.tree.view</field>
+            <field name="model">product</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+		<tree string="Produits">
+			<field name="name_product" string="Nom du produit"/>
+		</tree>
+            </field>
+        </record>
+
+
+	<record id="action_creation_product_oper" model="ir.actions.act_window">
+		<field name="name">Fiche Produit</field>
+		<field name="res_model">product</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+    </data>
+</openerp>

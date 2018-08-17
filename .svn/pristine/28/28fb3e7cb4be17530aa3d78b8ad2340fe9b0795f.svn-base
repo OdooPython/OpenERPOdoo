@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_question" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="OPENERP_RELATIONS" value="[&apos;reponse&apos;]"/>
+	<queryString language="xPath">
+		<![CDATA[]]>
+	</queryString>
+	<field name="title" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/title]]></fieldDescription>
+	</field>
+	<field name="title_page" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/title_page]]></fieldDescription>
+	</field>
+	<field name="product_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/product_id]]></fieldDescription>
+	</field>
+	<field name="question" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/question]]></fieldDescription>
+	</field>
+	<field name="reponse" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/reponse]]></fieldDescription>
+	</field>
+	<field name="type" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/type]]></fieldDescription>
+	</field>
+	<field name="stat_path" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/stat_path]]></fieldDescription>
+	</field>
+	<group name="Page">
+		<groupExpression><![CDATA[$F{title_page}]]></groupExpression>
+		<groupHeader>
+			<band height="23">
+				<textField>
+					<reportElement x="18" y="3" width="538" height="20" isRemoveLineWhenBlank="true" forecolor="#0C8C8C"/>
+					<textElement>
+						<font size="12" isBold="true" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{title_page}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Question">
+		<groupExpression><![CDATA[$F{question}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement x="41" y="0" width="514" height="20" isRemoveLineWhenBlank="true"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{question}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="73" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="53" width="87" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" forecolor="#0C408E"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Produit :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="28" width="555" height="20" forecolor="#0C408E"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="88" y="53" width="468" height="20" isRemoveLineWhenBlank="true" forecolor="#C95A5A"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="455" y="10" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd.MM.yyyy").format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="437" y="10" width="18" height="20"/>
+				<textElement/>
+				<text><![CDATA[Le]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<rectangle>
+				<reportElement x="72" y="0" width="483" height="29">
+					<printWhenExpression><![CDATA[$F{type}.equals( "textbox" )||$F{type}.equals( "numerical_box" )||$F{type}.equals( "datetime" )]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="98" y="0" width="426" height="29" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{reponse}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="72" y="6" width="17" height="16">
+					<printWhenExpression><![CDATA[$F{type}.equals( "multiple_choice" )]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$F{stat_path} + "case-vide-carre.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="71" y="6" width="17" height="16">
+					<printWhenExpression><![CDATA[$F{type}.equals( "simple_choice" )]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$F{stat_path} + "radio-button.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="222" y="4" width="80" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" / "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="302" y="4" width="40" height="15"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="0" width="555" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

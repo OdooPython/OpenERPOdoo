@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+{
+    "name": "CCI REPORTING",
+    "version": "0.1",
+    "description": "CCI specefic module for Reporting",
+    "author": "Salwa KSILA & Marwa BEN MESSAOUD & Houssem ABID I-WAY",
+    "website": "http://www.iway-tn.com",
+    "depends": ["base", "jasper_reports",],
+    "category": "",
+    "init_xml": ['menuitem.xml',],
+    "demo_xml": [],
+    "update_xml": 
+    [
+            'menuitem.xml',
+            'liste_plaintes/wizard/wizard_liste_plaintes.xml',
+            'Etat_revenue/wizard/wizard_etat_revenue.xml',
+            'liste_op_eco_non_participant/wizard/wizard_op_eco_non_part.xml',
+            'Fiche_product/wizard/wizard_fiche_product.xml',
+            'liste_question/wizard/wizard_question_view.xml',
+            'liste_opportunity/wizard/wizard_opportunity.xml',
+            'Fiche_op_eco/wizard/wizard_fiche_op_eco.xml',
+            'Indicateur_performance/wizard/wizard_indicateur_performance.xml',
+
+
+    ],
+    "active": False,
+    "installable": True
+}
+# 'route_move/wizard/wizard_route_move.xml'
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

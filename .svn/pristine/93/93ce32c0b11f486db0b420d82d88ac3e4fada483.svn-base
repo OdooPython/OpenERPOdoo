@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_crm_category_graph">
+            <field name="name">crm.lead.graph</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <graph string="CRM" type="pivot">
+                    <!--<button class="oe_inline oe_stat_button" type="action" name="%(next_activity_tree_view)d"-->
+                    <!--icon="fa-usd"/>-->
+                    <field name="categ_id" type="row"/>
+                    <field name="name" type="col"/>
+                    <!--<field name="name" type="col"/>-->
+                    <!--<field name="create_date" interval="month" type="col"-->
+                           <!--filter_domain="['|','|',('create_date','ilike',self)"/>-->
+
+
+                    <!--<field name="planned_revenue" type="measure" string="Expected Revenue "/>-->
+                </graph>
+            </field>
+        </record>
+
+        <record id="action_crm_category_graph" model="ir.actions.act_window">
+            <field name="name">Analyse Opportunités</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <!--<field eval="False" name="view_id"/>-->
+            <!-- <field name="search_view_id" ref="account.view_account_invoice_filter"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+
+                </p>
+                <p>
+
+                </p>
+                <p>
+
+                </p>
+            </field>
+        </record>
+        <!--menuitem action="action_crm_category_graph" id="menu_action_category_graph" name="Tableau du bord pour les catégories"
+                  parent="base.menu_sales"/-->
+    </data>
+</openerp>

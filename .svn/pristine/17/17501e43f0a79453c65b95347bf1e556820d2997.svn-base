@@ -1,0 +1,311 @@
+# -*- coding: utf-8 -*-
+
+from datetime import date, datetime
+from dateutil import relativedelta
+from openerp import tools, api
+from openerp.osv import fields, osv
+from openerp.exceptions import Warning
+from openerp.exceptions import except_orm
+
+class res_partner_request(osv.osv):
+    _name="res.partner.request"
+
+
+    @api.model
+    def _lang_get(self):
+	languages = self.env['res.lang'].search([])
+        return [(language.code, language.name) for language in languages]
+
+    def __get_membership_state(self, *args, **kwargs):
+        return self._membership_state(*args, **kwargs)
+
+
+    _columns = {
+	'operator_id':fields.many2one('res.partner'),
+	'codif_infocham':fields.integer('Code infocham'),
+        'parent_id': fields.many2one('res.partner', 'Société', select=True),
+        'name': fields.char("Nom", required=True, select=True),
+        'function': fields.char("Poste occupé", select=True),
+        'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string="Secteurs d'activité",select=True),
+        'street': fields.char('Rue', select=True),
+        'street2': fields.char('Street2'),
+        'zip': fields.char('Code postale', size=24, change_default=True),
+        'city': fields.char('Ville'),
+        #'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict'),
+        'email': fields.char('Courriel'),
+        'phone': fields.char('Tél.'),
+        'fax': fields.char('Fax'),
+        'mobile': fields.char('Tél. portable'),
+	'matricule_fiscale' : fields.char("Matricule fiscale"),
+	'code_tva' : fields.char("Code TVA"),
+	'is_company': fields.boolean(' Est une société ?', help="Check if the contact is a company, otherwise it is a person"),
+        'comment': fields.text('Notes'),
+        'active': fields.boolean('Active'),
+        'customer': fields.boolean('Customer', help="Check this box if this contact is a customer."),
+        'supplier': fields.boolean('Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'ref': fields.char('Contact Reference', select=1),
+        'lang': fields.selection(_lang_get, 'Language',
+            help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
+        'date': fields.date('Date', select=1),
+        'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this contact if any.'),
+        'company_id': fields.many2one('res.company', 'Société', select=1),
+        'state': fields.selection(
+	[
+            ('draft', 'Brouillon'),
+            ('to_validate', 'En attente de validation'),
+	    ('validate', 'Validée'),
+	    ('reject', 'Refusée'),
+        ], 'Status',help="Gives the status of the product.",select=True),
+        'website': fields.char('Site Web', help="Website of Partner or Company"),
+        'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
+        'title': fields.many2one('res.partner.title', 'Civilité'),
+        'country_id': fields.many2one('res.country', 'Pays', ondelete='restrict'),
+
+    }
+    _defaults = {
+        'state': 'draft',
+	'active':True,
+    }
+    @api.multi
+    def onchange_type(self, is_company):
+        value = {'title': False}
+        if is_company:
+            value['use_parent_address'] = False
+            domain = {'title': [('domain', '=', 'partner')]}
+        else:
+            domain = {'title': [('domain', '=', 'contact')]}
+        return {'value': value, 'domain': domain}
+
+	#onchange contact/operateur
+    def	partner_change(self, cr, uid, ids, operator_id, context=None):
+	print 'u will change a partner=====',operator_id
+	value={}
+	name = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).name
+	category_id = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).category_id
+	country_id = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).country_id
+	street = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).street
+	mobile = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).mobile
+	website = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).website
+	city = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).city
+	zip = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).zip
+	fax = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).fax
+	email = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).email
+	title = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).title
+	phone = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).phone
+	is_company = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).is_company
+	matricule_fiscale = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).matricule_fiscale
+	code_tva = self.pool.get('res.partner').browse(cr, uid, operator_id, context=context).code_tva
+	return {'value': {
+			'name': name,
+			'category_id':category_id,
+			'country_id':country_id,
+			'street':street,
+			'mobile':mobile,
+			'website':website,
+			'city':city,
+			'zip':zip,
+			'fax':fax,
+			'email':email,
+			'phone':phone,
+			'title':title,
+			'is_company':is_company,
+			'matricule_fiscale':matricule_fiscale,
+			'code_tva':code_tva
+		}}
+	   
+	#------------ Workflow opérateur économique --------------
+    def draft(self, cr, uid, ids, context=None):
+	print "bruillon ......................................"
+        return self.write(cr, uid, ids, {'state': 'draft'})
+
+    def draft_to_validate(self, cr, uid, ids, context=None):
+	print "en attente de validation ...................................."
+	print "demande par email création opérateur économique ....."
+	print "uid ....",uid
+
+	user_partner=self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+	print 'user_partner....',user_partner
+	name_partner=self.pool.get('res.partner').browse(cr, uid, user_partner, context=context).name
+	print 'name_partner....',name_partner
+	if uid == 1 : 
+		print " hello admin "
+		raise osv.except_osv(('Administrator!'),('Vous pouvez créer les opérateurs et ses contacts depuis le menu CRM/Opérateurs économiques.'))
+
+	else :
+		#notif Responsable
+		op_id=self.browse(cr, uid, ids, context=context).id
+		print 'op_id',op_id
+
+		vals = {
+			'subject':'Demande de validation',
+			'body':'<html> Demande Ajout </html>',
+			'record_name':'Demande ajout',
+			'res_id':op_id,
+			'reply_to':user_partner,
+			'author_id':user_partner,
+			'model':'res.partner.request',
+			'type':'notification',
+			'email_from':user_partner,
+			'starred':True,
+		}
+		print 'vals ========',vals
+		message = self.pool.get('mail.message').create(cr, uid, vals, context=context) 
+		print 'message  ========',message 
+
+		#get the parent id of the chef
+		user_id=self.pool.get('resource.resource').search(cr, uid,[('user_id','=',uid)], context=context)
+		print "user_id",user_id
+		employee_id=self.pool.get('hr.employee').browse(cr, uid, user_id, context=context).parent_id.id
+		print "employee_id",employee_id
+		name=self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).name_related
+		print "name employee",name
+		partner_id=self.pool.get('res.partner').search(cr, uid,[('name','=',name)], context=context)
+		print "partner_id",partner_id
+
+		mail_notif_vals = {
+			'partner_id':3,
+			'message_id':message,
+			'is_read':False,
+			'starred':True,
+		}
+		print 'vals notif.......',mail_notif_vals
+		id_rec=self.pool.get('mail.notification').create(cr, uid, mail_notif_vals)
+		print "Notificationreçu vers admin ..................",id_rec
+
+
+	    	return self.write(cr, uid, ids, {'state': 'to_validate'})
+
+	#update by Marwa BM 13-09-2017 validate the request and create it in res.partner
+    def to_validate(self, cr, uid, ids, context=None):   
+	print "validé ...................................."
+	#notif qui crée l'opérateur
+	op_id=self.browse(cr, uid, ids, context=context).id
+	print 'op_id',op_id
+	print "uid ......",uid
+	#du res partner 
+	create_id=self.browse(cr, uid, op_id, context=context).create_uid.id
+	print 'create_id',create_id
+	print 'user id',uid
+	vals = {
+		'subject':'Validé',
+		'body':'<html> Demande Ajout Acceptée </html>',
+		'record_name':'Demande Ajout Acceptée',
+		'res_id':op_id,
+		'reply_to':uid,
+		'author_id':uid,
+		'model':'res.partner.request',
+		'type':'notification',
+		'email_from':uid,
+		'starred':True,
+	}
+	print 'vals ========',vals
+	message = self.pool.get('mail.message').create(cr, uid, vals, context=context) 
+	print 'message  ========',message 
+
+	partner_id=self.pool.get('res.users').browse(cr, uid, create_id, context=context).partner_id.id
+	print "partner_id",partner_id
+
+	mail_notif_vals = {
+		'partner_id':partner_id,
+		'message_id':message,
+		'is_read':False,
+		'starred':True,
+
+	}
+	print 'vals notif.......',mail_notif_vals
+
+	val = {
+		'name':self.browse(cr,uid,op_id,context=context).name,
+		'is_company':self.browse(cr,uid,op_id,context=context).is_company,
+		'category_id':self.browse(cr,uid,op_id,context=context).category_id,
+		'function':self.browse(cr,uid,op_id,context=context).function,
+		'email':self.browse(cr,uid,op_id,context=context).email,
+		'country_id':self.browse(cr,uid,op_id,context=context).country_id.id,
+		'matricule_fiscale':self.browse(cr,uid,op_id,context=context).matricule_fiscale,
+		'mobile':self.browse(cr,uid,op_id,context=context).mobile,
+		'street':self.browse(cr,uid,op_id,context=context).street,
+		'website':self.browse(cr,uid,op_id,context=context).website,
+		'code_tva':self.browse(cr,uid,op_id,context=context).code_tva,
+		'parent_id':self.browse(cr,uid,op_id,context=context).parent_id.id,
+		'phone':self.browse(cr,uid,op_id,context=context).phone,
+		#'birthdate':self.browse(cr,uid,op_id,context=context).birthdate,
+		'city':self.browse(cr,uid,op_id,context=context).city,
+		'street':self.browse(cr,uid,op_id,context=context).street,
+		'street2':self.browse(cr,uid,op_id,context=context).street2,
+		'title':self.browse(cr,uid,op_id,context=context).title,
+		'matricule_fiscale' : self.browse(cr,uid,op_id,context=context).matricule_fiscale,
+		'code_tva': self.browse(cr,uid,op_id,context=context).code_tva,
+	}
+	print 'val....',val
+
+	id_rec=self.pool.get('mail.notification').create(cr, uid, mail_notif_vals)
+	print "Notification reçu vers partner ..................",id_rec
+	res=self.pool.get('res.partner').create(cr,uid,val,context=context)
+	print 'res......',res
+	return self.write(cr, uid, ids, {'state': 'validate'})
+    	 
+
+    def to_reject(self, cr, uid, ids, context=None):   
+	print "refusé ......................................"
+	#notif Responsable
+	op_id=self.browse(cr, uid, ids, context=context).id
+	print 'op_id',op_id
+	print "uid ......",uid
+	create_id=self.browse(cr, uid, op_id, context=context).create_uid.id
+	print 'create_id',create_id
+	vals = {
+		'subject':'Refusé',
+		'body':'<html> Demande Ajout refusée </html>',
+		'record_name':'Demande Ajout refusée',
+		'res_id':op_id,
+		'reply_to':uid,
+		'author_id':uid,
+		'model':'res.partner.request',
+		'type':'notification',
+		'email_from':uid,
+		'starred':True,
+	}
+	print 'vals ========',vals
+	message = self.pool.get('mail.message').create(cr, uid, vals, context=context) 
+	print 'message  ========',message 
+
+	partner_id=self.pool.get('res.users').browse(cr, uid, create_id, context=context).partner_id.id
+	print "partner_id",partner_id
+
+	mail_notif_vals = {
+		'partner_id':partner_id,
+		'message_id':message,
+		'is_read':False,
+		'starred':True,
+
+	}
+	print 'vals notif.......',mail_notif_vals
+	id_rec=self.pool.get('mail.notification').create(cr, uid, mail_notif_vals)
+	print "Notificationreçu vers partner ..................",id_rec
+    	return self.write(cr, uid, ids, {'state': 'reject'})
+
+    def to_update(self, cr, uid, ids, context=None):   
+	print "update .................................."
+	return self.write(cr, uid, ids, {'state': 'update'})
+
+	#add by marwa BM 02-10-2017
+    def message_redirect_action(self, cr, uid, context=None):
+        """ For a given message, return an action that either
+            - opens the form view of the related document if model, res_id, and
+              read access to the document
+            - opens the Inbox with a default search on the conversation if model,
+              res_id
+            - opens the Inbox with context propagated
+
+        """
+	print "helloooooo",context
+        if context is None:
+            context = {}
+	#super(subClass, instance).method(args)
+	action=self.pool.get('mail.thread').message_redirect_action(cr, uid, context=context)
+	print "message_redirect",action
+        return action
+
+
+
+   

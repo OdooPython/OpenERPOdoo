@@ -1,0 +1,88 @@
+# -*- coding: utf-8 -*-
+from openerp.osv import fields, osv
+from datetime import date
+import time
+
+
+
+class crm_lead(osv.Model):
+	_inherit = "crm.lead"
+	# _rec_name = "product_id"
+	_columns = {
+		'name': fields.char(required=False),
+		'product_id': fields.many2one('product.template', string="Produit", required=True),
+		'date_debut': fields.date("Date de declanchement", readonly=True, default=date.today()),
+		'date_fin':fields.date("Date de clôture",readonly=True),
+
+	}
+
+	def onchange_revenue(self, cr, uid, ids, product_id, context=None):
+		print "u call onchange "
+		price = self.pool.get('product.template').browse(cr, uid, product_id, context=context).list_price
+		print "price............", price
+		return {'value': {'planned_revenue': price}}
+
+	def case_mark_won(self, cr, uid, ids, context=None):
+		""" Mark the case as won: state=done and probability=100
+		"""
+		res = super(crm_lead, self).case_mark_won(cr, uid, ids, context)
+
+		#--------------création des opérateurs dans l'article 14-09-2017
+		opprtunity_id=self.browse(cr, uid, ids, context=context).id
+		print 'opprtunity_id...........',opprtunity_id
+
+		product_idd = self.browse(cr, uid, opprtunity_id, context=context).product_id.id
+		print 'product_idd .......',product_idd
+
+		res_partner = self.browse(cr, uid, opprtunity_id, context=context).partner_id.id
+		print 'res_partner .......',res_partner
+
+		partner_product_ids = self.pool.get('product.participant').search(cr, uid, [('product_id', '=', product_idd),('name', '=', res_partner)],context=context)
+
+		if len(partner_product_ids) == 0:
+			val = {
+				'name': res_partner,
+				'product_id':product_idd,
+			}
+			print 'val......',val
+			inv_id = self.pool.get('product.participant').create(cr, uid, val)
+			print 'inv_id  .......',inv_id
+		#--------------ajout la date de cloture
+		active_record = self.browse(cr, uid, ids[0], context=context)
+		active_record.date_fin = time.strftime('%Y-%m-%d')
+		return res
+
+	def case_mark_lost(self, cr, uid, ids, context=None):
+		super(crm_lead, self).case_mark_lost(cr, uid, ids, context)
+		active_record = self.browse(cr, uid, ids[0], context=context)
+		active_record.date_fin = time.strftime('%Y-%m-%d')
+
+
+
+	def create(self, cr, uid, vals, context=None):
+		print 'u call create '
+		prod_name = self.pool.get('product.template').browse(cr, uid, vals['product_id'], context=context).name
+		vals['name'] = prod_name
+		return super(crm_lead, self).create(cr, uid, vals, context=None)
+
+
+
+	#whe the stage_id change to won the operator add into the product
+    	def write(self, cr, uid, ids, vals, context=None):
+		stage_id=vals.get('stage_id')
+		opprtunity_id=self.browse(cr, uid, ids, context=context).id
+		product_idd = self.browse(cr, uid, opprtunity_id, context=context).product_id.id
+		res_partner = self.browse(cr, uid, opprtunity_id, context=context).partner_id.id
+		
+		if stage_id == 6:
+			val = {
+				'name': res_partner,
+				'product_id':product_idd,
+			}
+			inv_id = self.pool.get('product.participant').create(cr, uid, val)
+			#--------------ajout la date de cloture
+			active_record = self.browse(cr, uid, ids[0], context=context)
+			active_record.date_fin = time.strftime('%Y-%m-%d')
+
+        	return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
+

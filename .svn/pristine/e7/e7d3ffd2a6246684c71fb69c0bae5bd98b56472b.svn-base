@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+	    <record model="ir.ui.view" id="view_calendar_event_form_inherit">
+		<field name="name">calendar.event.inherit</field>
+		<field name="model">calendar.event</field>
+		<field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+		<field name="arch" type="xml">
+		<xpath expr="//field[@name='partner_ids']" position="replace">
+			<field name="partner_ids" widget="many2manyattendee" domain="[('is_company','=', True)]"/>
+		</xpath>
+
+		<div>
+			<label for="partner_contact_id"  class="oe_edit_only"/>  
+			<h2>
+			<field name='partner_contact_id' widget="many2many_tags" domain="[('parent_id','in', partner_ids[0][2])]" class="oe_inline"/>  
+			</h2>
+		</div>
+
+		<div>
+			<label for="opportunity_ids"  class="oe_edit_only"/> 
+			<h2> 
+			<field name='opportunity_ids' domain="[('partner_id','in', partner_ids[0][2])]" class="oe_inline"/>  
+			</h2>
+		</div>
+		<xpath expr="//field[@name='start_datetime']" position="attributes">
+			<attribute name="required">1</attribute>
+		</xpath>
+
+		<xpath expr="//field[@name='stop_datetime']" position="attributes">
+			<attribute name="required">1</attribute>
+		</xpath>
+		</field>
+	    </record>
+
+
+
+	    <!-- CRM Meeting Search View   filter_domain="[('partner_ids','in','self')]"-->
+	    <record id="view_calendar_event_search_inherit" model="ir.ui.view">
+		<field name="name">calendar.Search.inherit</field>
+		<field name="model">calendar.event</field>
+                <field name="inherit_id" ref="calendar.view_calendar_event_search"/>
+		<field name="arch" type="xml">
+		        <xpath expr="//field[@name='partner_ids']" position="after">
+				<field name='opportunity_ids'/>  
+		        </xpath>
+		</field>
+	    </record>
+
+
+	    <!-- CRM Meeting Tree View  -->
+
+	    <record model="ir.ui.view" id="view_calendar_event_tree_inherit">
+		<field name="name">CRM - Meetings Tree</field>
+		<field name="model">calendar.event</field>
+		<field name="arch" type="xml">
+		    <tree string="Meetings" fonts="bold:message_unread==True">
+		        <field name="name" string="Subject"/>
+		        <field name="allday" invisible="True"/>
+		        <field name="start_datetime" string="Date Début"/>
+		        <field name="start_datetime" string="Date Fin"/>
+		        <field name="user_id"/>
+		        <field name="location"/>
+		        <field name="show_as"/>
+		        <field name="class" string="Privacy"/>
+		        <field name="state" invisible="True"/>
+		        <field name="duration"/>
+		        <field name="message_unread" invisible="1"/>
+		<!-- add two fields-->
+			<field name='partner_contact_id' domain="[('parent_id','in', partner_ids[0][2])]" string='Contact'/>  
+			<field name='opportunity_ids' domain="[('partner_id','in', partner_ids[0][2])]"/>
+			<field name='coach_id'/>
+		    </tree>
+		</field>
+	    </record>
+
+	    <record id="action_calendar_event_inherit" model="ir.actions.act_window">
+		<field name="name">Réunions</field>
+		<field name="res_model">calendar.event</field>
+		<field name="view_mode">tree,form,calendar,gantt</field>
+		<field name="view_id" ref="view_calendar_event_tree_inherit"/>
+		<field name="search_view_id" ref="view_calendar_event_search_inherit"/>
+        	<field name="domain">['|',('user_id', '=', uid),('opportunity_ids.section_id.user_id.id', '=', uid)]</field>
+	    </record>
+
+
+	<!-- Menu Réunion pour les chafes et les membres-->
+    	<menuitem name="Réunions" id="mail_menu_calendar" parent="test_menu_crm_config_activity" action="action_calendar_event_inherit"/>
+	<record id="mail_menu_calendar" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('cci_config_groups.group_coach_cci'),ref('cci_config_groups.group_user_cci')])]"/>
+	</record>
+
+	<!-- Menu Réunion pour l'admin-->
+	    <record id="action_calendar_event_inherit_admin" model="ir.actions.act_window">
+		<field name="name">Réunions</field>
+		<field name="res_model">calendar.event</field>
+		<field name="view_mode">tree,form,calendar,gantt</field>
+		<field name="view_id" ref="view_calendar_event_tree_inherit"/>
+		<field name="search_view_id" ref="view_calendar_event_search_inherit"/>
+	    </record>
+
+    	<menuitem name="Réunions" id="mail_menu_calendar_admin" parent="test_menu_crm_config_activity" action="action_calendar_event_inherit_admin"/>
+
+	<record id="mail_menu_calendar_admin" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one')])]"/>
+	</record>
+
+
+
+</data>
+</openerp>

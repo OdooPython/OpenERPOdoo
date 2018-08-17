@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+<!--==================== wizard View ==================-->
+        <record id='wizard_product_view' model="ir.ui.view">
+            <field name="name">Lancer Compagne Marketing</field>
+            <field name="model">wizard.product</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+		<form>
+			<group>
+				<field name="product_id" domain="[('type', '!=', 'service')]"/>
+			</group>
+
+			<button string="Lancer compagne marketing" name="get_operateur" type="object" class="oe_highlight"/>
+		</form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_wizard_product">
+            <field name="name">Lancer Compagne Marketing</field>
+            <field name="res_model">wizard.product</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_product_view"/>
+            <field name="target">new</field>
+        </record>
+        
+        <!--menuitem id="wizard_product_compagne" name="Lancer Compagne Marketing" action="action_wizard_product" parent="base.menu_product" sequence="60"/-->
+        <menuitem id="wizard_product_compagne" name="Lancer Compagne Marketing" action="action_wizard_product" parent="base.menu_sales" sequence="6"/>
+
+	<!-- hide lancer compagne marketing for user_cci add by marwa BM 30-08-2017-->
+	<record id="wizard_product_compagne" model="ir.ui.menu">
+		<field name="groups_id" eval="[(6,0, [ref('base.group_no_one'),ref('cci_config_groups.group_coach_cci')])]"/>
+	</record>
+
+
+
+    </data>
+</openerp>

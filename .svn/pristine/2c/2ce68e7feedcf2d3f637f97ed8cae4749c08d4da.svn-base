@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data> 
+		<record model="ir.ui.view" id="crm_dash_view">
+		<field name="name">crm.dash.kanban</field>
+		<field name="model">crm.dashboard.opportunity</field>
+		<field name="type">kanban</field>
+		<field name="arch" type="xml">
+	        <kanban class="oe_background_grey" create="0">
+		    <!--list of field to be loaded -->
+				<field name="id"/>
+				<field name="type_dash"/>
+				<field name="show_on_dashboard"/>
+				<field name="kanban_dashboard"/>
+				<field name="name" />
+
+
+				<templates> 
+		<t t-name="kanban-box" style="width: 1500px; height: 700px;">
+ 			<div t-attf-class="oe_kanban_color_#{kanban_getcolor(3)} oe_kanban_card oe_kanban_invoice">
+				<t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
+				<t t-value="record.type_dash.raw_value" t-set="journal_type"/>
+				<t t-value="record.id" t-set="id_graph"/>
+				<t t-call="JournalTop"/>
+				<div class="o_kanban_card_content o_visible">  
+                   <!-- <div class="row">
+						<t t-if="(journal_type == 'state')" t-call="JournalBodyState"/>
+				    </div>
+
+                    <div class="row">
+						<t t-if="(journal_type == 'dep')" t-call="JournalBodyDep"/>
+				    </div>-->
+	            <t t-if="(journal_type == 'state')" t-call="JournalBodyGraph"/>
+			    <t t-if="(journal_type == 'dep')" t-call="JournalBodyGraphDep"/>
+			    <t t-if="(journal_type == 'ag')" t-call="JournalBodyGraphAg"/>
+
+			    <t t-if="(journal_type == 'opportunity_won')" t-call="JournalBodyGraphNB"/>
+				<t t-if="(journal_type == 'opportunity_lost')" t-call="JournalBodyGraphNBOp"/>
+			    <t t-if="(journal_type == 'op_dep_won')" t-call="JournalBodyGraphNBDep"/>
+			    <t t-if="(journal_type == 'op_dep_lost')" t-call="JournalBodyGraphNBDepLost"/>
+
+			    <t t-if="(journal_type == 'vision_state')" t-call="JournalBodyGraphVision"/>
+			    <t t-if="(journal_type == 'vision_dep')" t-call="JournalBodyGraphVisionDep"/>
+			    <t t-if="(journal_type == 'vision_ag')" t-call="JournalBodyGraphVisionAg"/>
+			    <t t-if="(journal_type == 'chiffre')" t-call="JournalBodyGraphCaAg"/>
+			    <t t-if="(journal_type == 'ca_dep')" t-call="JournalBodyGraphCaDep"/>
+			    <t t-if="(journal_type == 'operateur')" t-call="JournalBodyGraphOP"/>
+				<t t-if="(journal_type == 'operateur_revenue')" t-call="JournalBodyGraphOpRev"/>
+
+			    <t t-if="(journal_type == 'op_won')" t-call="JournalBodyGraphWon"/>
+			    <t t-if="(journal_type == 'op_lost')" t-call="JournalBodyGraphLost"/>
+			    <t t-if="(journal_type == 'period_won')" t-call="JournalBodyGraphPeriodWon"/>
+			    <t t-if="(journal_type == 'period_lost')" t-call="JournalBodyGraphPeriodLost"/>
+
+				    
+		        </div>
+		    </div>
+   
+ 		</t>
+				<t t-name="JournalTop">
+                        <div class="o_kanban_card_header">
+                            <div class="o_kanban_card_header_title">
+                                <h3 class="text-center">
+                                    <strong><field name="name"/></strong>
+                                </h3>
+                            </div>
+                        </div>
+                </t>
+                <!--<t t-name="JournalBodyState">
+                        <div class="col-xs-15  text-center ">
+                            <div class="row">
+                                <div class="col-xs-15  text-center">
+                                    <a>
+                                        
+				    				</a>
+                                </div>
+			      			</div>
+						</div>
+				</t>
+
+		 -->
+		 <t t-if="(journal_type == 'operateur')" t-name="JournalBodyGraphOP">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_top_ten" widget="kanban_graph" t-att-graph_type="_.contains(['operateur'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+		<t t-if="(journal_type == 'operateur_revenue')" t-name="JournalBodyGraphOpRev">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_top_ten_revenue" widget="kanban_graph" t-att-graph_type="_.contains(['operateur_revenue'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+		
+
+		 <t t-if="(journal_type == 'ca_dep')" t-name="JournalBodyGraphCaDep">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_ca_dep" widget="kanban_graph" t-att-graph_type="_.contains(['ca_dep'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+		 <t t-if="(journal_type == 'chiffre')" t-name="JournalBodyGraphCaAg">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_ca_ag" widget="kanban_graph" t-att-graph_type="_.contains(['chiffre'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+        <t t-if="(journal_type == 'vision_state')" t-name="JournalBodyGraphVision">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_vision_state" widget="kanban_graph" t-att-graph_type="_.contains(['vision_state'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+		<t t-if="(journal_type == 'vision_ag')" t-name="JournalBodyGraphVisionAg">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_vision_ag" widget="kanban_graph" t-att-graph_type="_.contains(['vision_ag'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+		<t t-if="(journal_type == 'vision_dep')" t-name="JournalBodyGraphVisionDep">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_vision_dep" widget="kanban_graph" t-att-graph_type="_.contains(['vision_dep'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+		<t t-if="(journal_type == 'state')" t-name="JournalBodyGraph">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_opportunity_state" widget="kanban_graph" t-att-graph_type="_.contains(['state'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+		<t t-if="(journal_type == 'dep')" t-name="JournalBodyGraphDep">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_opportunity_dep" widget="kanban_graph" t-att-graph_type="_.contains(['dep'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+		<t t-if="(journal_type == 'ag')" t-name="JournalBodyGraphAg">
+			<div class="o_kanban_graph_section">
+    			<field name="dashboard_opportunity_ag" widget="kanban_graph" t-att-graph_type="_.contains(['ag'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+
+
+		<t t-if="(journal_type == 'opportunity_won')" t-name="JournalBodyGraphNB">
+			<div class="o_kanban_graph_section">
+    			<field name="dashboard_change_opportunity_won" widget="kanban_graph" t-att-graph_type="_.contains(['opportunity'] ? 'line' : 'bar' , journal_type)"/>
+    		</div>
+		</t>
+		<t t-if="(journal_type == 'opportunity_lost')" t-name="JournalBodyGraphNBOp">
+    		<div class="o_kanban_graph_section">
+    			<field name="dashboard_change_opportunity_lost" widget="kanban_graph" t-att-graph_type="_.contains(['opportunity'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+
+		<t t-if="(journal_type == 'op_dep_won')" t-name="JournalBodyGraphNBDep">
+			<div class="o_kanban_graph_section">
+    			<field name="dashboard_change_opportunity_won_dep" widget="kanban_graph" t-att-graph_type="_.contains(['op_dep_won'] ? 'line' : 'bar' , journal_type)"/>
+    		</div>
+    	</t>
+    	<t t-if="(journal_type == 'op_dep_lost')" t-name="JournalBodyGraphNBDepLost">
+    		<div class="o_kanban_graph_section">
+    			<field name="dashboard_change_opportunity_lost_dep" widget="kanban_graph" t-att-graph_type="_.contains(['op_dep_lost'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+
+		<t t-if="(journal_type == 'period_won')" t-name="JournalBodyGraphPeriodWon">
+			<div class="o_kanban_graph_section">
+    			<field name="dashboard_change_opportunity_won_period" widget="kanban_graph" t-att-graph_type="_.contains(['period_won'] ? 'line' : 'bar' , journal_type)"/>
+    		</div>
+    	</t>
+    	
+    	<t t-if="(journal_type == 'period_lost')" t-name="JournalBodyGraphPeriodLost">
+    		<div class="o_kanban_graph_section">
+    			<field name="dashboard_change_opportunity_lost_period" widget="kanban_graph" t-att-graph_type="_.contains(['period_lost'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+
+		<t t-if="(journal_type == 'op_won')" t-name="JournalBodyGraphWon">
+			<div class="o_kanban_graph_section">
+    			<field name="dashboard_change_opportunity_won_dep_period" widget="kanban_graph" t-att-graph_type="_.contains(['op_won'] ? 'line' : 'bar' , journal_type)"/>
+    		</div>
+    	</t>
+
+    	<t t-if="(journal_type == 'op_lost')" t-name="JournalBodyGraphLost">
+    		<div class="o_kanban_graph_section">
+    			<field name="dashboard_change_opportunity_lost_dep_period" widget="kanban_graph" t-att-graph_type="_.contains(['op_lost'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+
+
+	    </templates>
+
+	    <!--<templates>
+	    	<t t-name="kanban-box">
+ 			<div t-attf-class="oe_kanban_color_#{kanban_getcolor(8)} oe_kanban_card oe_kanban_invoice">
+
+				<t t-value="JSON.parse(record.dashboard_kanban.raw_value)" t-set="kanban"/>
+				<t t-value="record.type.raw_value" t-set="journal_type"/>
+				<t t-value="record.id" t-set="id_graph"/>
+				<t t-call="JournalTopBox"/>
+				<div class="o_kanban_card_content o_visible">
+					<t t-if="(journal_type == 'ca_ag')" t-call="JournalBodyGraphCaAg"/>
+				</div>
+			</div>
+		</t>
+		 <t t-name="JournalTopBox">
+                        <div class="o_kanban_card_header">
+                            <div class="o_kanban_card_header_title">
+                                <h3 class="text-center">
+                                    <strong><field name="name"/></strong>
+                                </h3>
+                            </div>
+                        </div>
+                </t>
+                <t t-if="(journal_type == 'ca_ag')" t-name="JournalBodyGraphCaAg">
+			<div class="o_kanban_graph_section">
+    				<field name="dashboard_ca_ag" widget="kanban_graph" t-att-graph_type="_.contains(['ca_ag'] ? 'line' : 'bar' , journal_type)"/>
+			</div>
+		</t>
+	    </templates>-->
+
+
+			</kanban>
+		</field>
+		</record>
+
+
+		<record id="action_dash_oppo_before_sale_form" model="ir.actions.act_window">
+		<field name="name">Tableau De Bord Avant Vente</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">crm.dashboard.opportunity</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">kanban,form</field>
+        	<field name="context">{}</field>
+		<field name="domain">['|','|','|','|','|','|',('type_dash', '=', 'state'),('type_dash', '=', 'ag'),('type_dash', '=', 'dep'),('type_dash', '=', 'vision_state'),('type_dash', '=', 'vision_dep'),('type_dash', '=', 'vision_ag'),('type_dash', '=', 'ca_dep')]</field>
+		</record>
+
+		<record id="action_dash_oppo_after_sale_form" model="ir.actions.act_window">
+		<field name="name">Tableau De Bord Aprés Vente</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">crm.dashboard.opportunity</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">kanban,form</field>
+        	<field name="context">{}</field>
+		<field name="domain">['|','|','|','|','|','|','|','|','|','|',('type_dash','=','chiffre'),('type_dash','=','op_lost'),('type_dash','=','op_won'),('type_dash', '=', 'op_dep_won'),('type_dash', '=', 'op_dep_lost'),('type_dash', '=', 'opportunity_won'),('type_dash', '=', 'opportunity_lost'),('type_dash', '=', 'operateur'),('type_dash', '=','operateur_revenue'),('type_dash', '=', 'period_won'),('type_dash', '=', 'period_lost')]</field>
+		</record>
+
+		<menuitem id="menu_dashboard_opp_before_sale" name="Opportunité" parent="menu_crm_dashboard_before_sale" action="action_dash_oppo_before_sale_form"/>
+		<menuitem id="menu_dashboard_opp_after_sale" name="Opportunité" parent="menu_crm_dashboard_after_sale" action="action_dash_oppo_after_sale_form"/>
+
+	</data>
+</openerp>

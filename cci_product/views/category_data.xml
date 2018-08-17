@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="1">
+
+<!-- After installation of the module, open the related menu -->
+	<record id="categ1" model="product.category">
+		<field name="name">SALON SPÉCIALISÉ</field>
+		<field name="parent_id" eval="ref('product.product_category_all')"/>
+	</record>
+	<record id="categ2" model="product.category">
+		<field name="name">FORUMS ET JOURNEES D'INFORMATION</field>
+		<field name="parent_id" eval="ref('product.product_category_all')"/>
+	</record>
+	<record id="categ3" model="product.category">
+		<field name="name">MISSIONS D'AFFAIRES</field>
+		<field name="parent_id" eval="ref('product.product_category_all')"/>
+	</record>
+	<record id="categ4" model="product.category">
+		<field name="name">FORMATION</field>
+		<field name="parent_id" eval="ref('product.product_category_all')"/>
+	</record>
+	<record id="categ5" model="product.category">
+		<field name="name">PUBLICATIONS</field>
+		<field name="parent_id" eval="ref('product.product_category_all')"/>
+	</record>
+	<record id="categ6" model="product.category">
+		<field name="name">Lancement du Campus des métiers</field>
+		<field name="parent_id" eval="ref('cci_product.categ4')"/>	
+	</record>
+	<record id="categ7" model="product.category">
+		<field name="name">Formation diplomante</field>
+		<field name="parent_id" eval="ref('cci_product.categ4')"/>	
+	</record>
+	<record id="categ8" model="product.category">
+		<field name="name">Formation continue</field>
+		<field name="parent_id" eval="ref('cci_product.categ4')"/>	
+	</record>
+	<record id="categ9" model="product.category">
+		<field name="name">Formation professionnelle</field>
+		<field name="parent_id" eval="ref('cci_product.categ4')"/>	
+	</record>
+	<record id="categ10" model="product.category">
+		<field name="name">Mini M.B.A</field>
+		<field name="parent_id" eval="ref('cci_product.categ7')"/>	
+	</record>
+	<record id="categ11" model="product.category">
+		<field name="name">Master d'Etat Français</field>
+		<field name="parent_id" eval="ref('cci_product.categ7')"/>	
+	</record>
+
+</data>
+</openerp>

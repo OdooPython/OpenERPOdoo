@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="produit_tree_view">
+            <field name="name">cci.messaging.tree</field>
+            <field name="model">cci.messaging</field>
+            <field name="arch" type="xml">
+                <tree string="Messages envoyés">
+                    <field name="recipient_ids"/>
+                    <field name="subject"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_messaging_form">
+            <field name="name">cci.messaging.form</field>
+            <field name="model">cci.messaging</field>
+            <field name="arch" type="xml">
+                <form string="Messagerie interne">
+                    <header>
+                        <button name="send" string="Envoyer Maintenant" type="object"  states='outgoing' class="oe_highlight"/>
+                        <button name="mark_outgoing" string="Recommencer" type="object" states='exception,cancel'/>
+                        <button name="cancel" string="Annuler" type="object" states='outgoing'/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="outgoing,sent,received,exception,cancel"/>
+                    </header>
+                    <sheet>
+                        <field name="mail_personel_id" required="0" invisible="1"/>
+                        <label for="subject" class="oe_edit_only"/>
+                        <h2>
+                            <field name="subject"/>
+                        </h2>
+                        <div style="vertical-align: top;">
+                            par
+                            <field name="author_id" class="oe_inline" string="User"/>
+                            le
+                            <field name="date" readonly="1" class="oe_inline"/>
+                            <!-- ************************  -->
+                        </div>
+                        <group>
+                            <field name="email_from"/>
+                            <field name="recipient_ids" required="1" widget="many2many_tags" domain="[('customer','=',False)]"/>
+                            <field name="email_bcc"/>
+                        </group>
+                        <notebook>
+                            <page string="Corps de texte">
+                                <field name="body_html"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="action_create_mail">
+            <field name="name">Messages envoyés</field>
+            <field name="res_model">cci.messaging</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('create_uid', '=', uid)]</field>
+        </record>
+
+	<!--action_request_redirect 02-10-2017-->
+        <record id="action_messaging_pers_redirect" model="ir.actions.server">
+            <field name="name">Messaging Redirection (Document / Inbox)</field>
+            <field name="condition">True</field>
+            <field name="model_id" ref="model_cci_messaging"/>
+            <field name="code">action = pool.get('cci.messaging').message_redirect_action(cr, uid, context)</field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+	    <!--field name="context">{'default_model':cci.messaging}</field-->
+        </record>
+
+
+        <menuitem id="menu_todo_task" name="Nouveau message" parent="mail.mail_feeds" action="action_create_mail" sequence="1"/>
+    </data>
+</openerp>

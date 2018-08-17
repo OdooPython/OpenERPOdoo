@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!--
+		added by Marwa BM 15-08-2017
+		Form Contact
+	-->
+ 	<record id="view_partner_contact_form" model="ir.ui.view">
+            <field name="name">Contact</field>
+            <field name="model">res.partner.request</field>
+	    <field name="priority" eval="4"/> 
+	    <field name="arch" type="xml">
+                <form string="Contacts">
+			<header>
+				<button string="À valider" name="a_valider_bt" states="draft, to_validate" type="workflow" 						class="oe_highlight"/>
+				<button string="Valider" name="valider_bt" states="to_validate" type="workflow" class="oe_highlight" 						groups="base.group_no_one"/>
+				<button string="Annuler" name="reject_bt" states="to_validate" type="workflow" class="oe_highlight" 						groups="base.group_no_one"/>
+				<field name="state" widget="statusbar" statusbar_visible="draft,to_validate,validate,reject"/>
+			</header>
+                <sheet>
+                    <div class="oe_title oe_left">
+                        <div class="oe_edit_only">
+                            <label for="name"/>
+			</div>
+
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Nom" 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+			    <field name="is_company" invisible="1" default="False" string='Nom' 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                        </h1>
+			<field name="parent_id" placeholder="Société" domain="[('is_company', '=', True)]" 
+			       attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                        <!--field name="category_id" widget="many2many_tags" placeholder="Secteurs d'activité..."/-->
+                    </div>
+
+                    <group>
+                        
+                        <group>
+                            <field name="function" placeholder="ex: Directeur..." string="Poste occupé" 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                            <field name="phone" attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                            <field name="mobile" attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                            <field name="email" widget="email" 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+			    <field name="matricule_fiscale" 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+			    <field name="code_tva" attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                        </group>
+                    </group>
+                   
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!--
+		added by Marwa BM 13-09-2017
+		Form Contact update
+	-->
+
+ 	<record id="view_partner_contact_update_form" model="ir.ui.view">
+            <field name="name">Contact</field>
+            <field name="model">res.partner.request</field>
+	    <field name="priority" eval="4"/> 
+	    <field name="arch" type="xml">
+                <form string="Contacts">
+			<header>
+				<button string="À valider" name="a_valider_bt" states="draft, to_validate" type="workflow" 						class="oe_highlight"/>
+				<button string="Valider" name="valider_bt" states="to_validate" type="workflow" class="oe_highlight" 						groups="base.group_no_one"/>
+				<button string="Annuler" name="reject_bt" states="to_validate" type="workflow" class="oe_highlight" 						groups="base.group_no_one"/>
+				<field name="state" widget="statusbar" statusbar_visible="draft,to_validate,validate,reject"/>
+			</header>
+                <sheet>
+		<div>
+			<div class="oe_edit_only">
+				<label for="operator_id" string="Contact"/>
+			</div>
+		
+	            <field name="operator_id" domain="[('is_company', '=', False),('parent_id','!=',None)]" string='Contact' 				   style="width: 50%%" on_change="partner_change(operator_id)" placeholder="Choisir un contact..." 				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+		</div>
+
+                    <div class="oe_title oe_left">
+                        <div class="oe_edit_only">
+                            <label for="name"/>
+			</div>
+
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Nom" 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+			    <field name="is_company" invisible="1" default="False" string='Nom' 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                        </h1>
+			<field name="parent_id" placeholder="Société" domain="[('is_company', '=', True)]" 
+			       attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                        <!--field name="category_id" widget="many2many_tags" placeholder="Secteur d'activité..."/-->
+                    </div>
+
+                    <group>
+                        
+                        <group>
+                            <field name="function" placeholder="ex: Directeur..." string="Poste occupé" 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                            <field name="phone" attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                            <field name="mobile" attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                            <field name="email" widget="email" 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+			    <field name="matricule_fiscale" 
+				   attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+			    <field name="code_tva" attrs="{'readonly': [ ('state', 'in', ['to_validate','validate','reject'])]}"/>
+                        </group>
+                    </group>
+                   
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Partner -->
+        <record id="view_contact_tree" model="ir.ui.view">
+            <field name="name">res.contact.tree</field>
+            <field name="model">res.partner.request</field>
+	    <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Contacts" colors="red:state == 'to_validate';blue:state=='validate';grey:state=='reject'">
+                    <field name="name" string='Nom'/>
+                    <field name="function" string="Poste occupé"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="state"/>
+                    <field name="is_company" default="False" invisible='1'/>
+                </tree>
+            </field>
+        </record>
+
+
+
+
+
+	<!--Form demande d'ajout contact Update by Marwa BM 10-08-2017-->
+        <record id="action_demande_contact_form_inherit" model="ir.actions.act_window">
+            <field name="name">Demande d'ajout Contact pour un Opérateur Économique</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.request</field>
+      	    <field name="view_type">form</field>
+      	    <field name="view_mode">tree,form</field>
+      	    <field name="view_id" ref="view_partner_contact_form"></field>
+	    <field name="domain">[('is_company','=',False),('state','in',['validate','to_validate','reject'])]</field>
+
+        </record>
+
+	<!--Form demande modification contact Update by Marwa BM 24-08-2017-->
+	<!--afficher que en état brouillon et en attente de validation-->
+        <record id="action_update_contact_form_inherit" model="ir.actions.act_window">
+            <field name="name">Demande de modification Contact pour un Opérateur Économique</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.request</field>
+      	    <field name="view_type">form</field>
+      	    <field name="view_mode">tree,form</field>
+      	    <field name="view_id" ref="view_partner_contact_update_form"></field>
+	    <field name="domain">[('is_company','=',False),('state','in',['draft','to_validate'])]</field>
+
+        </record>
+	<!--Sequence by Marwa BM 25-08-2017-->
+	<record id="action_update_contact_form_1" model="ir.actions.act_window.view">
+	    <field name="sequence" eval="1"/>
+	    <field name="view_mode">tree</field>
+	    <field name="view_id" ref="view_contact_tree"/>
+	    <field name="act_window_id" ref="action_update_contact_form_inherit"/>
+	</record>
+
+	<record id="action_demande_contact_form_1" model="ir.actions.act_window.view">
+	    <field eval="0" name="sequence"/>
+	    <field name="view_mode">tree</field>
+	    <field name="view_id" ref="view_contact_tree"/>
+	    <field name="act_window_id" ref="action_demande_contact_form_inherit"/>
+	</record>
+
+
+        <!--Sous Menu Demande opérateurs économique add by marwa BM le 07-08-2017-->
+        <menuitem id="menu_add_conatct_op_eco" name="Ajout Contact"
+                  parent="menu_sales_team_maj" action="action_demande_contact_form_inherit"/>
+
+        <menuitem id="menu_update_conatct_op_eco" name="Modification Contact"
+                  parent="menu_sales_team_maj" action="action_update_contact_form_inherit"/>
+
+   
+    </data>
+</openerp>

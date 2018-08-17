@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_dashboard_coach,dashboard.coach,model_crm_dashboard,cci_config_groups.group_coach_cci,1,1,1,1
+access_dashboard_user,dashboard.user,model_crm_dashboard,cci_config_groups.group_user_cci,1,1,1,1
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,114 @@
+# -*- coding: utf-8 -*-
+from datetime import date, datetime
+import time
+from dateutil import relativedelta
+from openerp import tools
+from openerp.osv import fields, osv
+from datetime import datetime
+from openerp.tools.translate import _
+from openerp.exceptions import Warning
+import openerp
+
+class crm_next_activity(osv.Model):
+    _inherit = "crm.lead"
+    _name= "crm.lead"
+
+    _columns = {
+
+        'type_act': fields.selection([
+            ('Mail', "Email"),
+            ('Appel', "Appel"),
+	    ('Reunion',"Réunion"),
+        ], 'Type'),
+
+        'date_action': fields.datetime(string='Date début', select=True),
+
+    }
+
+
+
+    def closed_action(self,cr,uid,ids,context=None):
+
+	type_activity=self.browse(cr,uid,ids,context=context).type_act
+        for operation in self.browse(cr, uid, ids, context=context):
+            date_deadline = operation.date_deadline
+            date_action = operation.date_action
+            title_action = operation.title_action
+
+	    #test sur les champs date
+	    if  (date_deadline == False and  date_action == False):
+		raise osv.except_osv(_('Ops Date requis!'), _('Veuillez saisir les dates.'))
+	    else :
+		#vider les champs date
+		self.write(cr, uid, ids, {'date_deadline': False,'date_action': False,'title_action': False,'type_act': False})
+        return True
+
+
+
+
+    def show_activity(self,cr,uid,ids,context=None):
+	print "context",context
+	print "you will show the view of an activity ...."
+	type_activity=self.browse(cr,uid,ids,context=context).type_act
+	print 'type =======',type_activity
+        for operation in self.browse(cr, uid, ids, context=context):
+        	title_action = operation.title_action 
+		partner_id = operation.partner_id.id
+		partner_name=self.pool.get('res.partner').browse(cr,uid,partner_id,context=context).name
+		name = operation.name #produit en question
+                date_action = operation.date_action
+		print '.....',title_action,'...',partner_id,'.......',partner_name,'...',name,'.....',date_action
+		
+	#'target': 'new' lose the create button ,
+	if type_activity =="Appel" :
+		print "vue appel............"
+
+		return {
+			'name': ('Appel'),
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'crm.phonecall',
+			'view_id ref= crm_case_inbound_phone_form_view_inherit':True,
+        		'context': {'default_name': title_action},
+			'type': 'ir.actions.act_window',
+			'target': 'current',
+		}
+
+	if type_activity =="Mail" :
+		print "vue email............"
+		return {
+			'name': ('Email'),
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'mail.mail',
+			'view_id ref= view_mail_form_inherit':True,
+            		'context': {'default_subject': title_action},
+			'type': 'ir.actions.act_window',
+			'target': 'current',
+
+		}
+
+
+	if type_activity =="Reunion" :
+		print "vue réunion.........."
+
+		return {
+			'name': ('Réunion'),
+			'view_type': 'form',
+			'view_mode': 'form,tree',
+			'view_id ref= view_calendar_event_form_inherit':True,
+        		'context': {'default_name': title_action},
+			'res_model': 'calendar.event',
+			'type': 'ir.actions.act_window',
+			'target': 'current',
+		}
+
+
+
+	return True
+
+
+
+
+
+

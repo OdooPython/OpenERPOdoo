@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subreport_operateur_eco" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="OPENERP_RELATIONS" value="[&apos;category_id&apos;]"/>
+	<queryString language="xPath">
+		<![CDATA[]]>
+	</queryString>
+	<field name="Adhesion-member_lines" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Adhesion-member_lines]]></fieldDescription>
+	</field>
+	<field name="Etiquettes-category_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Etiquettes-category_id]]></fieldDescription>
+	</field>
+	<field name="Nom_de_la_categorie-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Etiquettes-category_id/Nom_de_la_categorie-name]]></fieldDescription>
+	</field>
+	<field name="Nom_complet-complete_name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Etiquettes-category_id/Nom_complet-complete_name]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/id]]></fieldDescription>
+	</field>
+	<field name="Actif-active" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Etiquettes-category_id/Actif-active]]></fieldDescription>
+	</field>
+	<field name="id2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Etiquettes-category_id/id]]></fieldDescription>
+	</field>
+	<field name="Categories_enfants-child_ids" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Etiquettes-category_id/Categories_enfants-child_ids]]></fieldDescription>
+	</field>
+	<field name="id3" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Etiquettes-category_id/Categories_enfants-child_ids/id]]></fieldDescription>
+	</field>
+	<field name="Categories_enfants-child_ids2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Etiquettes-category_id/Categories_enfants-child_ids/Categories_enfants-child_ids]]></fieldDescription>
+	</field>
+	<field name="Nom_complet-complete_name2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Etiquettes-category_id/Categories_enfants-child_ids/Nom_complet-complete_name]]></fieldDescription>
+	</field>
+	<group name="id">
+		<groupExpression><![CDATA[$F{id}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="595" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Nom_de_la_categorie-name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

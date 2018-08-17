@@ -1,0 +1,107 @@
+#-*- coding:utf-8 -*-
+import json
+from datetime import datetime, timedelta
+import calendar
+from babel.dates import format_datetime, format_date
+
+from openerp import models, api, _, fields
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+
+class crm_dashboard_opportunity(models.Model):
+    _name = "crm.dashboard.opportunity"
+
+    @api.one
+    def _kanban_dashboard(self):
+        self.kanban_dashboard = json.dumps(self.get_journal_dashboard_datas())
+
+    @api.one
+    def _dashboard_opportunity_state(self):
+	self.dashboard_opportunity_state = json.dumps(self.get_dashboard_opportunity_state())
+    @api.one
+    def _dashboard_opportunity_dep(self):
+	self.dashboard_opportunity_dep = json.dumps(self.get_dashboard_opportunity_dep())
+    @api.one
+    def _dashboard_opportunity_ag(self):
+	self.dashboard_opportunity_ag = json.dumps(self.get_dashboard_opportunity_ag())
+
+    name = fields.Char(string='Name') 
+    type_dash = fields.Selection([('state', "state"),('ag', "ag"),('dep', "dep")]) 
+
+    kanban_dashboard = fields.Text(compute='_kanban_dashboard')
+    dashboard_opportunity_state = fields.Text(compute='_dashboard_opportunity_state')
+    dashboard_opportunity_dep = fields.Text(compute='_dashboard_opportunity_dep')
+    dashboard_opportunity_ag = fields.Text(compute='_dashboard_opportunity_ag')
+
+    show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
+
+
+    @api.multi
+    def get_journal_dashboard_datas(self):
+	print "u call get_journal_dashboard_datas"
+
+
+
+    #Nombre des opportunités par état ou à suivre est true
+    @api.multi
+    def get_dashboard_opportunity_state(self):
+	data = []
+	list_prod = []
+	value = 0
+ 	if self.type_dash == 'state' :
+		product_ids = self.env['product.template'].search([('a_suivre','=',True)])
+		print '.......',product_ids
+		for product in product_ids :
+			list_prod.append(product.id)
+		print tuple(list_prod)
+		self.env.cr.execute("SELECT COUNT(id), stage_id, product_id FROM crm_lead WHERE product_id in %s GROUP BY stage_id, product_id",(tuple(list_prod),))
+		res = self.env.cr.dictfetchall()
+		for i in res:
+			stage_id = i['stage_id']
+			value = i.get('count')
+			state = self.env['crm.case.stage'].browse(stage_id).name
+			data.append({'label':state , 'value':value,'id':self.id})
+		return [{'values': data, 'area': True,'id': self.id}]
+
+
+    #Nombre des opportunités par département ou à suivre est true
+    @api.multi
+    def get_dashboard_opportunity_dep(self):
+	data = []
+	list_prod = []
+	value = 0
+ 	if self.type_dash == 'dep' :
+		product_ids = self.env['product.template'].search([('a_suivre','=',True)])
+		
+		for product in product_ids :
+			list_prod.append(product.id)
+		
+		self.env.cr.execute("SELECT COUNT(id), section_id, product_id FROM crm_lead WHERE product_id in %s GROUP BY section_id, product_id",(tuple(list_prod),))
+		res = self.env.cr.dictfetchall()
+		for i in res:
+			section_id = i['section_id']
+			value = i.get('count')
+			section = self.env['crm.case.section'].browse(section_id).name
+			data.append({'label':section , 'value':value,'id':self.id})
+		return [{'values': data, 'area': True,'id': self.id}]
+
+
+    #Nombre des opportunités par agent commercial ou à suivre est true
+    @api.multi
+    def get_dashboard_opportunity_ag(self):
+	data = []
+	list_prod = []
+	value = 0
+ 	if self.type_dash == 'ag' :
+		product_ids = self.env['product.template'].search([('a_suivre','=',True)])
+		
+		for product in product_ids :
+			list_prod.append(product.id)
+		
+		self.env.cr.execute("SELECT COUNT(id), user_id, product_id FROM crm_lead WHERE product_id in %s GROUP BY user_id, product_id",(tuple(list_prod),))
+		res = self.env.cr.dictfetchall()
+		for i in res:
+			user_id = i['user_id']
+			value = i.get('count')
+			user = self.env['res.users'].browse(user_id).name
+			data.append({'label':user , 'value':value,'id':self.id})
+		return [{'values': data, 'area': True,'id': self.id}]

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!--added by salwa ksila add 27/03/2017-->
+        <record model="ir.ui.view" id="wizard_form_view_contact">
+            <field name="name">wizard.form</field>
+            <field name="model">cci.contact.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <footer>
+                        <button name="_charger_contact" type="object"
+                                string="Contacts" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_wizard_contact">
+            <field name="name">fetch contact</field>
+            <field name="res_model">cci.contact.wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_form_view_contact"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

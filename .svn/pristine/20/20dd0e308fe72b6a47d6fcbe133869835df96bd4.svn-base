@@ -1,0 +1,136 @@
+#-*- coding:utf-8 -*-
+import json
+from datetime import datetime, timedelta
+import calendar
+from babel.dates import format_datetime, format_date
+
+from openerp import models, api, _, fields
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+
+class crm_dashboard(models.Model):
+    _name = "crm.dashboard"
+
+    @api.one
+    def _kanban_dashboard(self):
+        self.kanban_dashboard = json.dumps(self.get_journal_dashboard_datas())
+
+    @api.one
+    def _kanban_dashboard_graph(self):
+	self.kanban_dashboard_graph = json.dumps(self.get_line_graph_datas())
+
+
+    @api.one
+    def _kanban_dashboard_graph_act(self):
+	self.kanban_dashboard_graph_act = json.dumps(self.get_bar_graph_datas())
+
+    @api.one
+    def _kanban_dashboard_graph_pro(self):
+	self.kanban_dashboard_graph_pro = json.dumps(self.get_rect_graph_datas())
+    #fields
+    name = fields.Char(string='Name')      
+    type = fields.Selection([('opportunity', "opportunity"),('activity', "activity"),('product', "product")])    
+    kanban_dashboard = fields.Text(compute='_kanban_dashboard')
+    kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
+    kanban_dashboard_graph_act = fields.Text(compute='_kanban_dashboard_graph_act')
+    kanban_dashboard_graph_pro = fields.Text(compute='_kanban_dashboard_graph_pro')
+    show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True) 
+  
+
+    
+    @api.multi
+    def get_journal_dashboard_datas(self):
+	print "u call get_journal_dashboard_datas"
+
+	#Somme total de revunue crm.lead
+	query1 = "SELECT SUM(planned_revenue) FROM crm_lead"
+	self.env.cr.execute(query1)
+	res = self.env.cr.dictfetchall()
+	for i in res:
+		planned_revenue=i['sum']
+
+	#Somme total de revunue crm.lead par type
+	query3 = "SELECT SUM(planned_revenue) FROM crm_lead WHERE type_act IN ('Appel','Mail','Reunion')"
+	self.env.cr.execute(query3)
+	res3 = self.env.cr.dictfetchall()
+	for i in res3:
+		planned_revenue_act=i['sum']
+
+	#Somme total de revunue product
+	query4 = "SELECT SUM(list_price) FROM product_template"
+	self.env.cr.execute(query4)
+	res4 = self.env.cr.dictfetchall()
+	for i in res4:
+		planned_revenue_pro=i['sum']
+
+	#Nombre des activités prochaine
+	query2 = "SELECT COUNT(id) FROM crm_lead WHERE type_act != ''"
+	self.env.cr.execute(query2)
+	count = self.env.cr.dictfetchall()
+	for i in count:
+		number_activity=i['count'] 
+		number_activity_pro=i['count']
+
+	return {
+		'planned_revenue': planned_revenue,
+		'number_activity':number_activity,
+		'planned_revenue_act':planned_revenue_act,
+		'planned_revenue_pro':planned_revenue_pro,
+		'number_activity_pro':number_activity_pro
+	}
+
+    #Affichage des produits et nbre des opportunités
+    @api.multi
+    def get_line_graph_datas(self):
+	print "u call get_line_graph_datas"
+	data = []
+ 	if self.type == 'opportunity' :
+		query1 = "SELECT name FROM crm_lead"
+		self.env.cr.execute(query1)
+		res = self.env.cr.dictfetchall()
+		for i in res:
+			label=i['name']
+			self.env.cr.execute('SELECT COUNT(id) FROM crm_lead WHERE name =%s',(label,))
+			res1 = self.env.cr.dictfetchall()
+			v=res1[0]
+			value=v.get('count')
+			data.append({'label':label , 'value':value ,'id':self.id})
+		return [{'values': data, 'area': True}]
+
+
+    #Nombre des activités prochaine pour chaque Produit
+    @api.multi
+    def get_bar_graph_datas(self):
+	print "u call get_bar_graph_datas"
+	data = []
+	if self.type == 'activity' :
+		query5 = "SELECT name FROM crm_lead"
+		self.env.cr.execute(query5)
+		res5 = self.env.cr.dictfetchall()
+		for i in res5:
+			label=i['name']
+			self.env.cr.execute("SELECT COUNT(id) FROM crm_lead WHERE type_act != '' AND name =%s",(label,))
+			res6 = self.env.cr.dictfetchall()
+			value=res6[0]
+			number_activity_pro=value.get('count')
+			data.append({'label': label, 'value':number_activity_pro, 'id':self.id})
+		return [{'values': data, 'area': True, 'id': self.id}]
+
+    #Affichage des produits et ses revenus
+    @api.multi
+    def get_rect_graph_datas(self):
+	print "u call get_rect_graph_datas"
+	data = []
+ 	if self.type == 'product' :
+		query1 = "SELECT name, planned_revenue FROM crm_lead"
+		self.env.cr.execute(query1)
+		res = self.env.cr.dictfetchall()
+		for i in res:
+			label=i['name']
+			price=i['planned_revenue']
+			print "planned_revenue",price
+			data.append({'label':label , 'value':price ,'id':self.id})
+		return [{'values': data, 'area': True, 'id': self.id}]
+
+
+
+

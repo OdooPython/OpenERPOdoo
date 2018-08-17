@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        
+
+        <record id="product_template_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.common.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+					<header>
+						<button string="À valider" name="a_valider_bt" states="draft" type="workflow" class="oe_highlight"/>
+						<button string="Valider" name="valider_bt" states="to_validate" type="workflow" class="oe_highlight"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,to_validate,validate"/>
+					</header>
+				</xpath>
+
+				<xpath expr="//field[@name='list_price']" position="after">
+					<field name="date_debut" attrs="{'invisible':[('type','in',['visite','service'])],'required': [('type','in',['formation','foire'])]}"/>
+					<field name="date_fin" attrs="{'invisible':[('type','in',['visite','service'])],'required': [('type','in',['formation','foire'])]}"/>
+				</xpath>
+				<!--add 13-10-2017-->
+				<xpath expr="//field[@name='list_price']" position="attributes">
+					<attribute name="required">True</attribute>
+				</xpath>
+				<page string="Procurements" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</page>
+
+				<page string="Sales" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</page>
+
+				<xpath expr="//page[@string='Inventory']" position="replace"/>
+
+				<xpath expr="//field[@name='description']" position="replace"/>
+
+				<xpath expr="//page[@string='Information']" position="attributes">
+					<attribute name="string">Information générale</attribute>
+				</xpath>
+	    </field>
+	</record>
+
+	<!--add filters by marwa bm 15-0-->
+	<record id="view_product_filter" model="ir.ui.view">
+            <field name="name">product.filter</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <search string="Chercher produit">
+                    <field name="name"/>
+                    <separator/>
+						<filter domain="[('type','!=',['visite','service'])]" string="Produits" name="product"/>
+						<filter domain="[('active','=',False)]" string="Produits inactifs" name="inactif_product"/>
+						<filter domain="[('type','=','visite')]" string="Produits visite" name="visite"/>
+						<filter domain="[('type','=','service')]" string="Produits adhésion" name="adhesion"/>
+                    <separator/>
+                </search>
+            </field>
+        </record>
+
+	<!--update by marwa BM -->
+        <record id="product_template_action_inherit" model="ir.actions.act_window">
+            <field name="name">Produits</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product.product_template_kanban_view"/>
+            <field name="search_view_id" ref="view_product_filter"/>
+		<!--make the search as default-->
+            <field name="context">{"search_default_product": 1}</field>
+        </record>
+
+	<!--change the sequence and the action of a menu-->
+    <record model="ir.ui.menu" id="base.menu_product">
+      <field name="sequence">1</field>
+    </record>
+    <record model="ir.ui.menu" id="product.menu_product_template_action">
+      <field name="action" ref="product_template_action_inherit"/>
+    </record>
+
+
+
+
+
+ 	<record id="product_template_only_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.product.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                    <xpath expr="//field[@name='ean13']" position="replace"/>
+		    <xpath expr="//field[@name='attribute_line_ids']" position="before">
+			<button string="Ajouter attribut" name="add_attribute" type="object"/>
+		    </xpath>
+                   <xpath expr="//page[@name='variants']" position="attributes">
+			<attribute name="attrs">{'invisible':[('type','=','visite')]}</attribute>
+		   </xpath>
+	    </field>
+	</record>
+
+        <record id="account_product_template_form_view_inherit" model="ir.ui.view">
+            <field name="name">account.product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//page[@string='Accounting']" position="after">
+                    <page name="OperateursEconomiques" string="Operateurs Economiques" attrs="{'invisible':[('type','=','visite')]}">
+			<field name="ope_eco_ids" context="{'product_id': active_id,}"/>
+		    </page>
+
+		    <page name="Participants" string="Participants" attrs="{'invisible':[('type','!=','foire'),('type','!=','formation')]}">
+			<field name="participant_ids" context="{'product_id': active_id,}"/>
+	
+		    </page>
+
+		   <page name="Sessions" string="Sessions" attrs="{'invisible':[('type','!=','foire'),('type','!=','formation')]}">
+			<field name="session_ids" context="{'product_id': active_id,}"/>
+		    </page>
+
+		   <page name="Présence" string="Présences" attrs="{'invisible':[('type','!=','foire'),('type','!=','formation')]}">
+			<field name="presence_ids" context="{'product_id': active_id,}"/>
+		    </page>
+
+		   <page name="Plan de visite" string="Plan de visite" attrs="{'invisible':[('type','!=','visite')]}">
+			<field name="visite_ids" context="{'product_id': active_id,}"/>
+		    </page>
+
+                </xpath>
+
+		<xpath expr="//page[@string='Accounting']" position="inside">
+			<group>
+				<field name="product_sector_ids"/>
+			</group>
+		</xpath>
+		<xpath expr="//page[@string='Accounting']" position="attributes">
+                    <attribute name="string">Catégories et secteurs d'activités</attribute>
+		    <attribute name="attrs">{'invisible':[('type','=','visite')]}</attribute>
+
+
+                </xpath>
+
+		<xpath expr="//field[@name='taxes_id']" position="replace"/>
+		<xpath expr="//field[@name='supplier_taxes_id']" position="replace"/>
+	    </field>
+	</record>
+
+
+<!--*********Operateur Economique Form**********-->
+	<record id="view_product_participant_form" model="ir.ui.view">
+		<field name="name">product.participant.form</field>
+		<field name="model">product.participant</field>
+		<field name="arch" type="xml">
+			<form string="Liste des operateurs economiques Par Produit">
+				<sheet>
+					<group>	<field name="name" domain="[('is_company','=',True)]"/> </group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	<record id="view_product_participant_tree" model="ir.ui.view">
+		<field name="name">product.participant.tree</field>
+		<field name="model">product.participant</field>
+		<field name="arch" type="xml">
+			<tree string="Liste des operateurs economiques Par Produit">
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_creation_product_participant" model="ir.actions.act_window">
+		<field name="name">product.participant.action</field>
+		<field name="res_model">product.participant</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+<!--********* Plan visite Form add by marwa BM 14-09-2017 **********-->
+	<record id="view_plan_visite_form" model="ir.ui.view">
+		<field name="name">plan.visite.form</field>
+		<field name="model">product.visite</field>
+		<field name="arch" type="xml">
+			<form string="Plan visite">
+				<sheet>
+				<group>
+					<field name="date"/>
+					<field name="heure_deb"/>
+					<field name="heure_fin"/>
+					<field name="op_eco" string="Opérateur Économique" domain="[('is_company','=',True)]"/>
+					<field name="note"/>
+			</group>
+
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="view_plan_visite_tree" model="ir.ui.view">
+		<field name="name">plan.visite.tree</field>
+		<field name="model">product.visite</field>
+		<field name="arch" type="xml">
+			<tree string="Plan visite">
+				<field name="date"/>
+				<field name="heure_deb"/>
+				<field name="heure_fin"/>
+				<field name="op_eco" string="Opérateur Économique" domain="[('is_company','=',True)]"/>
+				<field name="note"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_creation_plan_visite" model="ir.actions.act_window">
+		<field name="name">Visites</field>
+		<field name="res_model">product.visite</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+
+
+
+<!--***********Participant Form***********-->
+	<record id="view_participant_contact_form" model="ir.ui.view">
+		<field name="name">participant.contact.form</field>
+		<field name="model">participant.contact</field>
+		<field name="arch" type="xml">
+			<form string="Contacts">
+				<sheet>
+					Merci de choisir un opérateur économique 
+					<group>	<field name="participant_id" domain="[('product_id','=', product_id)]" on_change='onchange_participant_id(participant_id)'/></group>	
+						<group> <field name="name" /> </group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	<record id="view_participant_contact_tree" model="ir.ui.view">
+		<field name="name">participant.contact.tree</field>
+		<field name="model">participant.contact</field>
+		<field name="arch" type="xml">
+			<tree string="Contacts">
+				<field name="participant_id"/>
+				<field name="name" domain="[('parent_id','=', participant_id)]"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_participant_contact_product" model="ir.actions.act_window">
+		<field name="name">participant.contact</field>
+		<field name="res_model">participant.contact</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+<!--******************Session Form****************-->
+	<record id="view_session_product_form" model="ir.ui.view">
+		<field name="name">product.session.form</field>
+		<field name="model">product.session</field>
+		<field name="arch" type="xml">
+			<form string="Programme" create="false">
+				<sheet>
+						<group>	<field name="name"/>	</group>
+						<group> <field name="heure_debut" class="oe_inline"/> </group>
+						<group> <field name="heure_fin" class="oe_inline"/> </group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	<record id="view_product_session_tree" model="ir.ui.view">
+		<field name="name">product.session.tree</field>
+		<field name="model">product.session</field>
+		<field name="arch" type="xml">
+			<tree string="Programme">
+				<field name="name"/>
+				<field name="heure_debut"/>
+				<field name="heure_fin"/>
+
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_creation_session_product" model="ir.actions.act_window">
+		<field name="name">Programme</field>
+		<field name="res_model">product.session</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+
+
+<!--******************Presence Form****************-->
+	<record id="view_session_presence_form" model="ir.ui.view">
+		<field name="name">session.presence.form</field>
+		<field name="model">session.presence</field>
+		<field name="arch" type="xml">
+			<form string="Liste des présences">
+				<sheet>
+					<group>
+						<field name="contact_id" domain="[('product_id','=', product_id)]"/>
+					</group>
+					<group>
+						<field name="session_id"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	<record id="view_session_presence_tree" model="ir.ui.view">
+		<field name="name">session.presence.tree</field>
+		<field name="model">session.presence</field>
+		<field name="arch" type="xml">
+			<tree string="Liste des Participants Par Produit">
+				<field name="contact_id" />
+				<field name="session_id"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_creation_session_presence" model="ir.actions.act_window">
+		<field name="name">Présence par session</field>
+		<field name="res_model">session.presence</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+
+    </data>
+</openerp>

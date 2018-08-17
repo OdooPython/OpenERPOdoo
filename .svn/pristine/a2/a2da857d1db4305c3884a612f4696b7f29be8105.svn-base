@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cci_messaging_coach,cci.messaging,model_cci_messaging,cci_config_groups.group_coach_cci,1,1,1,1
+access_cci_messaging_user,cci.messaging,model_cci_messaging,cci_config_groups.group_user_cci,1,1,1,1
+
+
+

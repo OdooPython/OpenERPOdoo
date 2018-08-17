@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_crm_infocham_form">
+            <field name="name">view_crm_infocham_form</field>
+            <field name="model">cci.crm.infocham</field>
+            <field name="arch" type="xml">
+                <form>
+                	<sheet>
+						<separator string="Veuillez configurer CRM pour ajouter tous les adhérants ..."/>
+						<group>
+							<field name="url"/>
+							<field name="code_cci"/>
+						</group>
+						<div class="oe_button_box oe_right">
+							<button name="get_operateur" string="Configurer" type="object" class="oe_highlight"/>
+						</div>
+					</sheet>
+		</form>
+	    </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_crm_infocham_tree">
+            <field name="name">view_crm_infocham_tree</field>
+            <field name="model">cci.crm.infocham</field>
+            <field name="arch" type="xml">
+                <tree>
+			<field name="create_uid" string="Utilisateur"/>
+			<field name="code_cci" string="Code CCI"/>
+			<button name="get_operateur" string="Configurer" type="object" class="oe_highlight"/>
+
+		</tree>
+	    </field>
+        </record>
+
+
+        <!-- open meetings related to given partner -->
+        <record id="crm_infocham_action" model="ir.actions.act_window">
+            <field name="name">Configuration CRM INFOCHAM</field>
+            <field name="res_model">cci.crm.infocham</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_crm_infocham_tree"/>
+        </record>
+
+
+        <!--Menu Email-->
+        <menuitem name="Configuration Infocham" id="menu_config_infocham" parent="base.menu_base_config" action="crm_infocham_action"/>
+
+    </data>
+</openerp>
